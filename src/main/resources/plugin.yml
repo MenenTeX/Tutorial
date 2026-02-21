@@ -1,0 +1,39 @@
+name: Tutorial
+main: org.menentex.Tutorial.Main
+version: ${version}
+api-version: 1.20
+softdepend:
+  - ProtocolLib
+  - PlaceholderAPI
+description: A powerful tutorial creation plugin
+website: https://github.com/MenenTeX/Tutorial
+authors: [MenenTeX]
+commands:
+  tutoedit:
+    description: Edit menu command
+    usage: /tutoedit
+    aliases:
+      - tutorialedit
+      - tutedit
+    permission: tutorial.edit
+  tutorial:
+    description: Play tutorial
+    usage: /tutorial
+    aliases:
+      - tuto
+      - tutorials
+      - tutorialcreator
+    permission: tutorial.use
+  exit:
+    description: exit from tutorial
+    usage: /exit
+permissions:
+tutorialcreator.admin:
+  default: op
+  children:
+    tutorial.edit: true
+    tutorial.use: true
+  tutorial.edit:
+    default: op
+  tutorial.use:
+    default: op

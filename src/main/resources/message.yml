@@ -1,0 +1,132 @@
+# ===============================
+# Main Messages
+# ===============================
+
+prefix: "&8[&#0bb0a8Tutorial&8] &r"
+
+console-sender: "&cOnly players can use this command!"
+
+need-permission: "&cYou do not have permission to do this!"
+
+reload-success: "&a✔ Config reloaded successfully!"
+
+help-command:
+  - "&7------ &eTutorial Editor Help &7------"
+  - "&e/tutorialedit &6create &e<&6tutorialName&e>"
+  - "&e/tutorialedit &6delete &e<&6tutorialName&e>"
+  - "&e/tutorialedit &6save &e<&6tutorialName&e>"
+  - "&e/tutorialedit &6reload &e<&6tutorialName&e>"
+  - "&e/tutorialedit &6open &e<&6tutorialName&e>"
+  - "&7-------------------------------"
+  - ""
+  - "&7------ &eTutorial Help &7------"
+  - "&e/tutorial &e<&6tutorialName&e>"
+  - "&e/tutorial &e<&6tutorialName&e> &e<&6target&e>"
+  - "&e/tutorial &6exit"
+  - "&e/exit"
+  - "&7-------------------------------"
+
+# ===============================
+# Usage Messages
+# ===============================
+
+disable-sendMessage: "&c✖ Sending messages is currently disabled!"
+
+create-tutorial: "&a✔ Tutorial &6%tutorial% &acreated successfully!"
+
+delete-tutorial: "&c✖ Tutorial &6%tutorial% &cdeleted successfully!"
+
+save-tutorial: "&a✔ Tutorial &6%tutorial% &asaved successfully!"
+
+set-permission: "&e✔ Permission for this event set to: &6%perm%"
+
+send-permission: "&e Please enter permission for this event"
+
+create-event: "&a✔ Event &6%event% &acreated successfully!"
+
+exit-command: "&e✔ You have exited the tutorial."
+
+notintutorial: "&c✖ You are not currently in a tutorial."
+
+not-found-tutorial: "&c✖ Tutorial &6%tutorial% &cnot found!"
+
+help:
+
+  message:
+    - "&7Please enter the message."
+    - "&7If you want the message to be empty, leave -"
+
+  actionbar-message:
+    - "&7Please enter the actionMessage."
+    - "&7If you want the message to be empty, leave -"
+
+  actionbar-duration:
+    - "&7Enter the duration (example: &e5s &7or &e5m &7)."
+
+  title-title:
+    - "&7Please enter the title."
+    - "&7If you want the message to be empty, leave -"
+
+  title-subtitle:
+    - "&7Please enter the subtitle."
+    - "&7If you want the message to be empty, leave -"
+
+  title-timing:
+    - "&7Provide title timings in this format:"
+    - "&6FadeIn&8, &6Duration&8, &6FadeOut"
+    - "&72s -> sec , 2m -> min , 2h -> hour , 2t -> ticks"
+
+  delay:
+    - "&7Enter the duration (example: &e5s &7or &e5m &7)."
+
+  console-command:
+    - "&7Enter a command to execute:"
+    - "&7Placeholders supported via &ePlaceholderAPI"
+    - "&7Example: &e/kill %player%"
+
+  player-command:
+    - "&7Enter a command to execute:"
+    - "&7Placeholders supported via &ePlaceholderAPI"
+    - "&7Example: &e/kill %player%"
+
+  play-sound-name:
+    - "&7Provide a sound name to play."
+    - "&7Format: &e<SOUND_NAME>"
+    - "&7Example: &eENTITY_EXPERIENCE_ORB_PICKUP"
+
+  play-sound-pitch:
+    - "&7Please enter the &6Pitch&7 value (example: 1.0)."
+
+  play-sound-volume:
+    - "&7Please enter the &6Volume&7 value (example: 1.0)."
+
+  give-item-name:
+    - "&7Enter the item to give (example: &eDIAMOND_SWORD&7)."
+
+  give-item-amount:
+    - "&7Please enter the amount of the item (example: 64)."
+
+  potion-type:
+    - "&7Enter the potion type (example: &eSPEED, HEALING&7)."
+
+  potion-level:
+    - "&7Please enter the potion level (&e1-255&7)."
+
+  potion-duration:
+    - "&7Enter the duration (example: &e5s &7or &e5m &7or &e1h &7)."
+
+  teleport-world:
+    - "&7Please enter the world name."
+
+  teleport-location:
+    - "&7Provide the teleport location using this format:"
+    - ""
+    - "&6X&7, &6Y&7, &6Z&7, &6Yaw&7, &6Pitch &7(example: 100, 64, -200, 0, 90)"
+    - "&6X&7, &6Y&7, &6Z&7 &7(example: 100, 64, -200)"
+
+  set-gamemode:
+    - "&7Please enter the desired gamemode (&eSURVIVAL, CREATIVE, ADVENTURE, SPEC&7)."
+
+  event-playerinteract:
+    - "&7Please enter input like this:"
+    - "&6Right&7, &6Left&7, &6Both&7, &6Disable"

@@ -1,0 +1,14 @@
+tutorials:
+  batch: 50
+  first-join-tutorial: none
+timeout-enter-event:
+  message: 25
+  title: 60
+  actionbar: 15
+  delay: 15
+  teleport: 20
+  playsound: 40
+  playercommand: 20
+  consolecommand: 20
+  potion: 30
+  giveitem: 30
