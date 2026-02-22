@@ -59,16 +59,15 @@ public class TitleEvent extends TutorialEvents{
         String finalSubtitle = subtitle;
 
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")){
-            finalTitle = PlaceholderAPI.setPlaceholders(player, Utils.colorize(finalTitle));
-            finalSubtitle = PlaceholderAPI.setPlaceholders(player, Utils.colorize(finalSubtitle));
+            finalTitle = PlaceholderAPI.setPlaceholders(player, finalTitle);
+            finalSubtitle = PlaceholderAPI.setPlaceholders(player, finalSubtitle);
         }
         finalTitle = Utils.applyPlaceholders(title, Utils.placeholders(player, player.getWorld(), Bukkit.getServer().getName()));
         finalSubtitle = Utils.applyPlaceholders(subtitle, Utils.placeholders(player, player.getWorld(), Bukkit.getServer().getName()));
 
-
         player.sendTitle(
-                finalTitle,
-                finalSubtitle,
+                Utils.colorize(finalTitle),
+                Utils.colorize(finalSubtitle),
                 (int) (long) fadeIn,
                 (int) (long) duration,
                 (int) (long) fadeOut
@@ -93,8 +92,8 @@ public class TitleEvent extends TutorialEvents{
     public static TitleEvent deserialize(int index, ConfigurationSection section) {
         return new TitleEvent(
                 index,
-                section.getString("title", ""),
-                section.getString("subtitle", ""),
+                section.getString("title"),
+                section.getString("subtitle"),
                 section.getInt("duration"),
                 section.getInt("fadeIn"),
                 section.getInt("fadeOut")

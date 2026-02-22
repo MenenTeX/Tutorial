@@ -1,14 +1,54 @@
+# =====================================================
+# Tutorial System Configuration
+# =====================================================
+
 tutorials:
+  # Maximum number of tutorials loaded or processed per batch.
+  # Increasing this may improve loading speed but could impact performance
+  # if you have a very large amount of tutorial data.
   batch: 50
+
+  # Name of the tutorial that will automatically run
+  # when a player joins the server for the first time.
+  # Set to "none" to disable this feature.
   first-join-tutorial: none
+
+
+# =====================================================
+# Timeout Settings (in ticks)
+# 20 ticks = 1 second
+# These values define how long the system waits
+# for player input when editing or creating events.
+# =====================================================
+
 timeout-enter-event:
+
+  # Time allowed to enter a chat message input.
   message: 25
+
+  # Time allowed to enter title text input.
   title: 60
+
+  # Time allowed to configure an actionbar message.
   actionbar: 15
+
+  # Time allowed to configure a delay event.
   delay: 15
+
+  # Time allowed to configure teleport location input.
   teleport: 20
+
+  # Time allowed to configure a sound event.
   playsound: 40
+
+  # Time allowed to configure a player-executed command.
   playercommand: 20
+
+  # Time allowed to configure a console-executed command.
   consolecommand: 20
+
+  # Time allowed to configure potion effects.
   potion: 30
+
+  # Time allowed to configure item rewards.
   giveitem: 30

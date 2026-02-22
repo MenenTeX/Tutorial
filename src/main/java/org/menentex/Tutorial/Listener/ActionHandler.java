@@ -6,7 +6,7 @@ import org.menentex.Tutorial.DataManager.Gui.InMemoryGui;
 import org.menentex.Tutorial.DataManager.Gui.RegistryGui;
 import org.menentex.Tutorial.Events.*;
 import org.menentex.Tutorial.Main;
-import org.menentex.Tutorial.Utils.Utils;
+
 
 
 public class ActionHandler {
@@ -60,8 +60,8 @@ public class ActionHandler {
         InMemoryGui gui = getGui(guiName);
         gui.addEvent(new TitleEvent(
                 gui.getEvents().size(),
-                Utils.colorize(title),
-                Utils.colorize(subtitle),
+                title,
+                subtitle,
                 duration,
                 fadeIn,
                 fadeOut

@@ -34,7 +34,8 @@ public class TabComplete implements TabCompleter {
                 if (!sub.equals("reload")) {
                     RegistryGui registryGui = Main.getInstance().getRegistryGui();
                     for (InMemoryGui gui : registryGui.getAllGuis()) {
-                        completions.add(gui.getGuiName());
+                        if (sender.hasPermission(gui.getPermission()))
+                            completions.add(gui.getGuiName());
                     }
                 }
             }

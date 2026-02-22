@@ -389,9 +389,9 @@ public class InMemoryGui implements Gui {
         }
 
         if (async) {
-            Bukkit.getScheduler().runTaskAsynchronously(Main.getInstance(), Main.getInstance()::saveTutorial);
+            Bukkit.getScheduler().runTaskAsynchronously(Main.getInstance(), Main.getInstance()::saveTutorials);
         } else {
-            Main.getInstance().saveTutorial();
+            Main.getInstance().saveTutorials();
         }
 
     }
@@ -400,9 +400,9 @@ public class InMemoryGui implements Gui {
         String path = "tutorials." + guiName;
         Main.getInstance().getTutorialsConfig().set(path, null);
         if (async) {
-            Bukkit.getScheduler().runTaskAsynchronously(Main.getInstance(), Main.getInstance()::saveTutorial);
+            Bukkit.getScheduler().runTaskAsynchronously(Main.getInstance(), Main.getInstance()::saveTutorials);
         } else {
-            Main.getInstance().saveTutorial();
+            Main.getInstance().saveTutorials();
         }
     }
 

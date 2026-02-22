@@ -142,6 +142,7 @@ public class ClickInventoryHandler implements Listener{
 
                 case 50 -> {
                     player.closeInventory();
+                    if (!(Utils.hasPermission(player, true, Permissions.ADMIN, gui.getPermission()))) return;
                     PlayerStateManager playerStateManager = Main.getInstance().getPlayerStateManager();
                     GuiTaskManager guiTaskManager = Main.getInstance().getGuiTaskManager();
                     if (guiTaskManager.isRunning(guiName)){

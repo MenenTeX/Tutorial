@@ -26,8 +26,8 @@ public class Messages {
         HELP = new ArrayList<>();
         for (String l : getMessageList("help-command"))
             HELP.add(colorize(l));
-        RELOAD = colorize(getMessage("reload-success"));
-        NEED_PERMISSION = colorize(getMessage("need-permission"));
+        RELOAD = getFormat(getMessage("reload-success"));
+        NEED_PERMISSION = getFormat(getMessage("need-permission"));
     }
 
 

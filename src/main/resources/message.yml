@@ -11,7 +11,7 @@ need-permission: "&cYou do not have permission to do this!"
 reload-success: "&a✔ Config reloaded successfully!"
 
 help-command:
-  - "&7------ &eTutorial Editor Help &7------"
+  - "&7------ &bTutorial Editor Help &7------"
   - "&e/tutorialedit &6create &e<&6tutorialName&e>"
   - "&e/tutorialedit &6delete &e<&6tutorialName&e>"
   - "&e/tutorialedit &6save &e<&6tutorialName&e>"
@@ -19,7 +19,7 @@ help-command:
   - "&e/tutorialedit &6open &e<&6tutorialName&e>"
   - "&7-------------------------------"
   - ""
-  - "&7------ &eTutorial Help &7------"
+  - "&7------ &cTutorial Help &7------"
   - "&e/tutorial &e<&6tutorialName&e>"
   - "&e/tutorial &e<&6tutorialName&e> &e<&6target&e>"
   - "&e/tutorial &6exit"

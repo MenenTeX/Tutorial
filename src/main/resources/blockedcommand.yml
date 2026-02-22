@@ -1,2 +1,7 @@
+# List of commands that are not allowed to be executed
+# while the player is inside a tutorial session.
+# Add command names without the "/" prefix.
+# Example: "op", "plugins", "stop"
 blocked:
   - op
+  - stop

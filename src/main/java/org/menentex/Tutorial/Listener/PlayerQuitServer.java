@@ -27,7 +27,7 @@ public class PlayerQuitServer implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         FileConfiguration config = Main.getInstance().getConfig();
-        String guiName = config.getString("first-join-tutorial");
+        String guiName = config.getString("tutorials.first-join-tutorial");
         if (guiName == null || guiName.equalsIgnoreCase("none")) return;
 
         RegistryGui registryGui = Main.getInstance().getRegistryGui();

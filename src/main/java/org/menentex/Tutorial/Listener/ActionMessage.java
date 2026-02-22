@@ -510,7 +510,7 @@ public class ActionMessage implements Listener {
                     return;
                 }
                 try {
-                    if (!parts[0].matches("^[0-9smht]$") || !parts[1].matches("^[0-9smht]$") || !parts[2].matches("^[0-9smht]$")){
+                    if (!parts[0].matches("^[0-9]+[smht]?$") || !parts[1].matches("^[0-9]+[smht]?$") || !parts[2].matches("^[0-9]+[smht]?$")){
                         Utils.sendMessage(player, Utils.colorize(List.of("&cInvalid Number Format" , "&cPlease try again or type <cancel> to cancel")));
                         return;
                     }

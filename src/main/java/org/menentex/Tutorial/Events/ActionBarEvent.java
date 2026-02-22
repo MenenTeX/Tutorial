@@ -1,6 +1,8 @@
 package org.menentex.Tutorial.Events;
 
 import me.clip.placeholderapi.PlaceholderAPI;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
@@ -49,7 +51,7 @@ public class ActionBarEvent extends TutorialEvents{
                     return;
                 }
 
-                player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(Utils.colorize(finalMessage1)));
+                player.sendActionBar(Utils.colorizeComponent(finalMessage1));
                 count++;
             }
         }.runTaskTimer(Main.getInstance(), 0, 1L);

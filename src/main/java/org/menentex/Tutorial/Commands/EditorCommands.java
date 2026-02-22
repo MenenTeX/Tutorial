@@ -26,10 +26,7 @@ public class EditorCommands implements CommandExecutor {
         if (args.length == 1){
             if (args[0].equalsIgnoreCase("reload")){
                 Main plugin = Main.getInstance();
-                plugin.loadMessages();
-                new Messages();
-                plugin.loadTutorials();
-                plugin.loadBlockCommand();
+                plugin.reloadPlugin();
                 plugin.saveDefaultConfig();
                 plugin.reloadConfig();
                 RegistryGui registryGui = Main.getInstance().getRegistryGui();

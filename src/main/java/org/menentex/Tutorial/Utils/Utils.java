@@ -1,5 +1,7 @@
 package org.menentex.Tutorial.Utils;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.*;
 import org.bukkit.command.CommandSender;
@@ -88,6 +90,7 @@ public class Utils {
 
         itemMeta.setDisplayName(colorize(Objects.requireNonNullElse(display, "&f")));
 
+
         if (lore != null && !lore.isEmpty()){
             itemMeta.setLore(colorize(lore));
         }
@@ -133,6 +136,14 @@ public class Utils {
 
     public static List<String> getMessageList(String path){
         return Main.getInstance().getMessageConfig().getStringList(path);
+    }
+
+    public static Component colorizeComponent(String msg) {
+        return LegacyComponentSerializer.builder()
+                .character('&')
+                .hexColors()
+                .build()
+                .deserialize(msg);
     }
 
     public static String colorize(String msg){

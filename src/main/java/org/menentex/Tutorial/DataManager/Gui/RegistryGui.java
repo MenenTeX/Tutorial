@@ -30,5 +30,9 @@ public class RegistryGui {
             guiList.remove(guiName);
     }
 
+    public void removeAllGui(){
+        guiList.clear();
+    }
+
 
 }

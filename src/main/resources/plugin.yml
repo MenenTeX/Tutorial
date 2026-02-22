@@ -22,18 +22,20 @@ commands:
     aliases:
       - tuto
       - tutorials
-      - tutorialcreator
     permission: tutorial.use
   exit:
     description: exit from tutorial
     usage: /exit
+    permission: tutorial.exit
 permissions:
-tutorialcreator.admin:
-  default: op
-  children:
-    tutorial.edit: true
-    tutorial.use: true
+  tutorial.admin:
+    default: op
+    children:
+      tutorial.edit: true
+      tutorial.use: true
   tutorial.edit:
     default: op
   tutorial.use:
+    default: op
+  tutorial.exit:
     default: op

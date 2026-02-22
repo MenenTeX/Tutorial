@@ -1,5 +1,8 @@
 package org.menentex.Tutorial.Commands;
 
+import net.kyori.adventure.text.Component;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -29,6 +32,8 @@ public class PlayerCommands implements CommandExecutor {
 
         if (command.getName().equalsIgnoreCase("exit")) {
 
+            if (!Utils.hasPermission(player, true, Permissions.ADMIN, Permissions.EXIT)) return true;
+
             PlayerStateManager stateManager = Main.getInstance().getPlayerStateManager();
             PlayerState state = stateManager.getState(player).orElse(null);
 
@@ -49,10 +54,8 @@ public class PlayerCommands implements CommandExecutor {
                 return true;
             }
 
-            // Always end tutorial
             stateManager.endTutorial(player.getUniqueId());
 
-            // Remove potion effects
             for (PotionEffect effect : player.getActivePotionEffects()) {
                 player.removePotionEffect(effect.getType());
             }
@@ -83,6 +86,11 @@ public class PlayerCommands implements CommandExecutor {
 
             Player target = player;
 
+            InMemoryGui gui = registryGui.getGui(guiName).orElse(null);
+            if (gui == null) return true;
+
+            if (!(Utils.hasPermission(player, true, Permissions.ADMIN, gui.getPermission()))) return true;
+
             if (args.length == 2) {
                 if (!Utils.hasPermission(player, true, Permissions.ADMIN)) return true;
                 Player t = Bukkit.getPlayerExact(args[1]);
@@ -101,8 +109,7 @@ public class PlayerCommands implements CommandExecutor {
                 GuiTask guiTask = new GuiTask(guiName, playerStateManager, registryGui);
                 guiTask.runTaskTimer(Main.getInstance(), 0L, 1L);
                 guiTaskManager.register(guiName, guiTask);
-                InMemoryGui gui = registryGui.getGui(guiName).orElse(null);
-                if (gui == null) return true;
+
                 EventListMananger e = Main.getInstance().getEventListMananger();
 
                 if (gui.getLockMovement()) e.addMovementLock(target);
@@ -115,6 +122,9 @@ public class PlayerCommands implements CommandExecutor {
             }
 
         } else if (args[0].equalsIgnoreCase("exit")){
+
+            if (!Utils.hasPermission(player, true, Permissions.ADMIN, Permissions.EXIT)) return true;
+
             PlayerStateManager stateManager = Main.getInstance().getPlayerStateManager();
 
             PlayerState playerState = stateManager.getState(player).orElse(null);
