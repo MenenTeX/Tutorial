@@ -10,6 +10,10 @@ need-permission: "&cYou do not have permission to do this!"
 
 reload-success: "&a✔ Config reloaded successfully!"
 
+check-update: "There is a newer plugin version available: %new-version% , Current: %version%"
+
+lastes-version: "You are on the highest version."
+
 help-command:
   - "&7------ &bTutorial Editor Help &7------"
   - "&e/tutorialedit &6create &e<&6tutorialName&e>"

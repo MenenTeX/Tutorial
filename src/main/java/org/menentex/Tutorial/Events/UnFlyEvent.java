@@ -1,8 +1,12 @@
 package org.menentex.Tutorial.Events;
 
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.menentex.Tutorial.Utils.Utils;
+
+import java.util.List;
 
 public class UnFlyEvent extends TutorialEvents{
 
@@ -25,6 +29,16 @@ public class UnFlyEvent extends TutorialEvents{
     @Override
     public void serialize(ConfigurationSection section) {
         section.set("type", getDisplayName());
+    }
+
+    @Override
+    public ItemStack createItemForInv(){
+        return Utils.itemCreate(Material.ANVIL,
+                "&6UnFly",
+                List.of(
+                        "",
+                        "&#3F9AAEIndex &#3F9AAE: &#F6CE71" + getIndex()
+                ));
     }
 
 }

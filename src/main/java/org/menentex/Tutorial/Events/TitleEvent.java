@@ -2,9 +2,13 @@ package org.menentex.Tutorial.Events;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.menentex.Tutorial.Utils.Utils;
+
+import java.util.List;
 
 public class TitleEvent extends TutorialEvents{
 
@@ -98,6 +102,21 @@ public class TitleEvent extends TutorialEvents{
                 section.getInt("fadeIn"),
                 section.getInt("fadeOut")
         );
+    }
+
+    @Override
+    public ItemStack createItemForInv(){
+        return Utils.itemCreate(Material.BOOK,
+                "&6Title",
+                List.of(
+                        "",
+                        "&#3F9AAEIndex &#3F9AAE: &#F6CE71" + getIndex(),
+                        "&#3F9AAEDuration &#3F9AAE: &#F6CE71" + Utils.formatTick(getDuration()),
+                        "&#3F9AAETitle &#3F9AAE: &#F6CE71" + getTitle(),
+                        "&#3F9AAESubtitle &#3F9AAE: &#F6CE71" + getSubtitle(),
+                        "&#3F9AAEFadeIn &#3F9AAE: &#F6CE71" + Utils.formatTick(getFadeIn()),
+                        "&#3F9AAEFadeOut &#3F9AAE: &#F6CE71" + Utils.formatTick(getFadeOut())
+                ));
     }
 
 

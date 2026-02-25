@@ -1,9 +1,13 @@
 package org.menentex.Tutorial.Events;
 
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.menentex.Tutorial.Utils.Utils;
+
+import java.util.List;
 
 public class PlaySoundEvent extends TutorialEvents {
 
@@ -67,5 +71,17 @@ public class PlaySoundEvent extends TutorialEvents {
         return new PlaySoundEvent(index, sound, volume, pitch);
     }
 
+    @Override
+    public ItemStack createItemForInv() {
+        return Utils.itemCreate(Material.NOTE_BLOCK,
+                "&6Play Sound",
+                List.of(
+                        "",
+                        "&#3F9AAEIndex &#3F9AAE: &#F6CE71" + getIndex(),
+                        "&#3F9AAESound &#3F9AAE: &#F6CE71" + getSoundName(),
+                        "&#3F9AAEVolume &#3F9AAE: &#F6CE71" + getVolume(),
+                        "&#3F9AAEPitch &#3F9AAE: &#F6CE71" + getPitch()
 
+                ));
+    }
 }

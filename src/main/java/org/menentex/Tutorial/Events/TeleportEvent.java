@@ -1,9 +1,13 @@
 package org.menentex.Tutorial.Events;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.menentex.Tutorial.Utils.Utils;
+
+import java.util.List;
 
 public class TeleportEvent extends TutorialEvents {
 
@@ -58,6 +62,28 @@ public class TeleportEvent extends TutorialEvents {
         );
 
         return new TeleportEvent(index, location);
+    }
+
+    @Override
+    public ItemStack createItemForInv() {
+        String world = getLocation().getWorld().getName();
+        int x = getLocation().getBlockX();
+        int y = getLocation().getBlockY();
+        int z = getLocation().getBlockZ();
+        float yaw = getLocation().getYaw();
+        float pitch = getLocation().getPitch();
+        return Utils.itemCreate(Material.ENDER_PEARL,
+                "&6Teleport",
+                List.of(
+                        "",
+                        "&#3F9AAEIndex &#3F9AAE: &#F6CE71" + getIndex(),
+                        "&#3F9AAEWorld: &#3F9AAE: &#F6CE71" + world,
+                        "&#3F9AAEX: &#3F9AAE: &#F6CE71" + x,
+                        "&#3F9AAEY: &#3F9AAE: &#F6CE71" + y,
+                        "&#3F9AAEZ: &#3F9AAE: &#F6CE71" + z,
+                        "&#3F9AAEYaw: &#3F9AAE: &#F6CE71" + Float.toString(yaw).substring(0, Math.min(Float.toString(yaw).length(), 6)),
+                        "&#3F9AAEPitch: &#3F9AAE: &#F6CE71" + Float.toString(pitch).substring(0, Math.min(Float.toString(pitch).length(), 5))
+                ));
     }
 
 

@@ -6,11 +6,15 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.menentex.Tutorial.Main;
 import org.menentex.Tutorial.Utils.Utils;
+
+import java.util.List;
 
 public class ActionBarEvent extends TutorialEvents{
 
@@ -76,6 +80,18 @@ public class ActionBarEvent extends TutorialEvents{
         long duration = section.getLong("duration", 0L);
 
         return new ActionBarEvent(index, message, duration);
+    }
+
+    @Override
+    public ItemStack createItemForInv(){
+        return Utils.itemCreate(Material.DIAMOND,
+                "&6ActionBar",
+                List.of(
+                        "",
+                        "&#3F9AAEIndex &#3F9AAE: &#F6CE71" + getIndex(),
+                        "&#3F9AAEDuration &#3F9AAE: &#F6CE71" + Utils.formatTick(getDuration()),
+                        "&#3F9AAEActionBar &#3F9AAE: &#F6CE71" + getMessage()
+                ));
     }
 
 }

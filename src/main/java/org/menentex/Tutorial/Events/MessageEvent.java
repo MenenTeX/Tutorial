@@ -2,9 +2,13 @@ package org.menentex.Tutorial.Events;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.menentex.Tutorial.Utils.Utils;
+
+import java.util.List;
 
 public class MessageEvent extends TutorialEvents{
 
@@ -52,5 +56,15 @@ public class MessageEvent extends TutorialEvents{
         return new MessageEvent(index, message);
     }
 
+    @Override
+    public ItemStack createItemForInv(){
+        return Utils.itemCreate(Material.PAPER,
+                "&6Message",
+                List.of(
+                        "",
+                        "&#3F9AAEIndex &#3F9AAE: &#F6CE71" + getIndex(),
+                        "&#3F9AAEMessage &#3F9AAE: &#F6CE71" + getMessage()
+                ));
+    }
 
 }

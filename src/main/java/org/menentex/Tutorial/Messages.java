@@ -12,6 +12,8 @@ public class Messages {
     public static List<String> HELP;
     public static String NEED_PERMISSION;
     public static String RELOAD;
+    public static String UPDATE;
+    public static String LASTEST;
 
     public Messages(){
         initialize();
@@ -28,6 +30,8 @@ public class Messages {
             HELP.add(colorize(l));
         RELOAD = getFormat(getMessage("reload-success"));
         NEED_PERMISSION = getFormat(getMessage("need-permission"));
+        UPDATE = getMessage("check-update");
+        LASTEST = getMessage("lastes-version");
     }
 
 

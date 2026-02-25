@@ -7,6 +7,7 @@ import org.bukkit.inventory.ItemStack;
 import org.menentex.Tutorial.Utils.Utils;
 
 import java.util.HashMap;
+import java.util.List;
 
 public class GiveItemEvent extends TutorialEvents{
 
@@ -70,5 +71,16 @@ public class GiveItemEvent extends TutorialEvents{
         return new GiveItemEvent(index, material, amount);
     }
 
+    @Override
+    public ItemStack createItemForInv(){
+        return Utils.itemCreate(Material.BEACON,
+                "&6GiveItem",
+                List.of(
+                        "",
+                        "&#3F9AAEIndex &#3F9AAE: &#F6CE71" + getIndex(),
+                        "&#3F9AAEItem &#3F9AAE: &#F6CE71" + getItemName(),
+                        "&#3F9AAEAmount &#3F9AAE: &#F6CE71" + getAmount()
+                ));
+    }
 
 }

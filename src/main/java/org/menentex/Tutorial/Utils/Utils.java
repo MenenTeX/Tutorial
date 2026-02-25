@@ -178,251 +178,113 @@ public class Utils {
         switch (name.toLowerCase()){
             case "title" -> {
                 if (event instanceof TitleEvent titleEvent){
-                    item = itemCreate(Material.BOOK,
-                            "&6Title",
-                            List.of(
-                                    "",
-                                    "&#3F9AAEIndex &#3F9AAE: &#F6CE71" + titleEvent.getIndex(),
-                                    "&#3F9AAEDuration &#3F9AAE: &#F6CE71" + formatTick(titleEvent.getDuration()),
-                                    "&#3F9AAETitle &#3F9AAE: &#F6CE71" + titleEvent.getTitle(),
-                                    "&#3F9AAESubtitle &#3F9AAE: &#F6CE71" + titleEvent.getSubtitle(),
-                                    "&#3F9AAEFadeIn &#3F9AAE: &#F6CE71" + formatTick(titleEvent.getFadeIn()),
-                                    "&#3F9AAEFadeOut &#3F9AAE: &#F6CE71" + formatTick(titleEvent.getFadeOut())
-                            ));
+                    item = titleEvent.createItemForInv();
                 }
             }
             case "teleport" -> {
                 if (event instanceof TeleportEvent teleportEvent){
-                    String world = teleportEvent.getLocation().getWorld().getName();
-                    int x = teleportEvent.getLocation().getBlockX();
-                    int y = teleportEvent.getLocation().getBlockY();
-                    int z = teleportEvent.getLocation().getBlockZ();
-                    float yaw = teleportEvent.getLocation().getYaw();
-                    float pitch = teleportEvent.getLocation().getPitch();
-                    item = itemCreate(Material.ENDER_PEARL,
-                            "&6Teleport",
-                            List.of(
-                                    "",
-                                    "&#3F9AAEIndex &#3F9AAE: &#F6CE71" + teleportEvent.getIndex(),
-                                    "&#3F9AAEWorld: &#3F9AAE: &#F6CE71" + world,
-                                    "&#3F9AAEX: &#3F9AAE: &#F6CE71" + x,
-                                    "&#3F9AAEY: &#3F9AAE: &#F6CE71" + y,
-                                    "&#3F9AAEZ: &#3F9AAE: &#F6CE71" + z,
-                                    "&#3F9AAEYaw: &#3F9AAE: &#F6CE71" + Float.toString(yaw).substring(0, Math.min(Float.toString(yaw).length(), 6)),
-                                    "&#3F9AAEPitch: &#3F9AAE: &#F6CE71" + Float.toString(pitch).substring(0, Math.min(Float.toString(pitch).length(), 5))
-                            ));
+                    item = teleportEvent.createItemForInv();
                 }
             }
             case "setgamemode" -> {
                 if (event instanceof SetGameModeEvent setGameModeEvent){
-                    item = itemCreate(Material.NETHER_STAR,
-                            "&6Set GameMode",
-                            List.of(
-                                    "",
-                                    "&#3F9AAEIndex &#3F9AAE: &#F6CE71" + setGameModeEvent.getIndex(),
-                                    "&#3F9AAEGameMode &#3F9AAE: &#F6CE71" + setGameModeEvent.getGameMode().name()
-                            ));
+                    item = setGameModeEvent.createItemForInv();
                 }
             }
             case "playsound" -> {
                 if (event instanceof PlaySoundEvent playSoundEvent){
-                    item = itemCreate(Material.NOTE_BLOCK,
-                            "&6Play Sound",
-                            List.of(
-                                    "",
-                                    "&#3F9AAEIndex &#3F9AAE: &#F6CE71" + playSoundEvent.getIndex(),
-                                    "&#3F9AAESound &#3F9AAE: &#F6CE71" + playSoundEvent.getSoundName(),
-                                    "&#3F9AAEVolume &#3F9AAE: &#F6CE71" + playSoundEvent.getVolume(),
-                                    "&#3F9AAEPitch &#3F9AAE: &#F6CE71" + playSoundEvent.getPitch()
-
-                            ));
+                    item = playSoundEvent.createItemForInv();
                 }
             }
             case "playercommand" -> {
                 if (event instanceof PlayerCmdEvent playerCmdEvent){
-                    item = itemCreate(Material.STICK,
-                            "&6Player Command",
-                            List.of(
-                                    "",
-                                    "&#3F9AAEIndex &#3F9AAE: &#F6CE71" + playerCmdEvent.getIndex(),
-                                    "&#3F9AAECommand &#3F9AAE: &#F6CE71/" + playerCmdEvent.getCommand()
-                            ));
+                    item = playerCmdEvent.createItemForInv();
                 }
             }
             case "consolecommand" -> {
                 if (event instanceof ConsoleCmdEvent consoleCmdEvent){
-                    item = itemCreate(Material.BLAZE_ROD,
-                            "&6Console Command",
-                            List.of(
-                                    "",
-                                    "&#3F9AAEIndex &#3F9AAE: &#F6CE71" + consoleCmdEvent.getIndex(),
-                                    "&#3F9AAECommand &#3F9AAE: &#F6CE71/" + consoleCmdEvent.getCommand()
-                            ));
+                    item = consoleCmdEvent.createItemForInv();
                 }
             }
             case "message" -> {
                 if (event instanceof MessageEvent messageEvent){
-                    item = itemCreate(Material.PAPER,
-                            "&6Message",
-                            List.of(
-                                    "",
-                                    "&#3F9AAEIndex &#3F9AAE: &#F6CE71" + messageEvent.getIndex(),
-                                    "&#3F9AAEMessage &#3F9AAE: &#F6CE71" + messageEvent.getMessage()
-                            ));
+                    item = messageEvent.createItemForInv();
                 }
             }
             case "lockmovement" -> {
                 if (event instanceof LockMovementEvent lockMovementEvent){
-                    item = itemCreate(Material.LEATHER_BOOTS,
-                            "&6LockMovement",
-                            List.of(
-                                    "",
-                                    "&#3F9AAEIndex &#3F9AAE: &#F6CE71" + lockMovementEvent.getIndex()
-                            ),false, ItemFlag.HIDE_ATTRIBUTES);
+                    item = lockMovementEvent.createItemForInv();
                 }
             }
             case "lockheadmovement" -> {
                 if (event instanceof LockHeadMovementEvent lockHeadMovementEvent){
-                    item = itemCreate(Material.LEATHER_HELMET,
-                            "&6LockHeadMovement",
-                            List.of(
-                                    "",
-                                    "&#3F9AAEIndex &#3F9AAE: &#F6CE71" + lockHeadMovementEvent.getIndex()
-                            ),false, ItemFlag.HIDE_ATTRIBUTES);
+                    item = lockHeadMovementEvent.createItemForInv();
                 }
             }
             case "godmode" -> {
                 if (event instanceof GodModeEvent godModeEvent){
-                    item = itemCreate(Material.LEATHER_CHESTPLATE,
-                            "&6Godmode",
-                            List.of(
-                                    "",
-                                    "&#3F9AAEIndex &#3F9AAE: &#F6CE71" + godModeEvent.getIndex()
-                            ),false, ItemFlag.HIDE_ATTRIBUTES
-                            );
+                    item = godModeEvent.createItemForInv();
                 }
             }
             case "fly" -> {
                 if (event instanceof FlyEvent flyEvent){
-                    item = itemCreate(Material.FEATHER,
-                            "&6Fly",
-                            List.of(
-                                    "",
-                                    "&#3F9AAEIndex &#3F9AAE: &#F6CE71" + flyEvent.getIndex()
-                            ));
+                    item = flyEvent.createItemForInv();
                 }
             }
             case "delay" -> {
                 if (event instanceof DelayEvent delayEvent){
-                    item = itemCreate(Material.CLOCK,
-                            "&6Delay",
-                            List.of(
-                                    "",
-                                    "&#3F9AAEIndex &#3F9AAE: &#F6CE71" + delayEvent.getIndex(),
-                                    "&#3F9AAEDuration &#3F9AAE: &#F6CE71" + formatTick(delayEvent.getDuration())
-                            ));
+                    item = delayEvent.createItemForInv();
                 }
             }
             case "clear" -> {
                 if (event instanceof ClearChatEvent clearChatEvent){
-                    item = itemCreate(Material.COBWEB,
-                            "&6Clear Chat",
-                            List.of(
-                                    "",
-                                    "&#3F9AAEIndex &#3F9AAE: &#F6CE71" + clearChatEvent.getIndex()
-                            ));
+                    item = clearChatEvent.createItemForInv();
                 }
             }
             case "actionbar" -> {
                 if (event instanceof ActionBarEvent actionBarEvent){
-                    item = itemCreate(Material.DIAMOND,
-                            "&6ActionBar",
-                            List.of(
-                                    "",
-                                    "&#3F9AAEIndex &#3F9AAE: &#F6CE71" + actionBarEvent.getIndex(),
-                                    "&#3F9AAEDuration &#3F9AAE: &#F6CE71" + formatTick(actionBarEvent.getDuration()),
-                                    "&#3F9AAEActionBar &#3F9AAE: &#F6CE71" + actionBarEvent.getMessage()
-                            ));
+                    item = actionBarEvent.createItemForInv();
                 }
             }
             case "potion" -> {
-                if (event instanceof  PotionEvent potionEvent){
-                    item = itemCreate(Material.POTION,
-                            "&6Potion",
-                            List.of(
-                                    "",
-                                    "&#3F9AAEIndex &#3F9AAE: &#F6CE71" + potionEvent.getIndex(),
-                                    "&#3F9AAEPotion &#3F9AAE: &#F6CE71" + potionEvent.getPotionName(),
-                                    "&#3F9AAEDuration &#3F9AAE: &#F6CE71" + formatTick(potionEvent.getTime())
-                            ), false, ItemFlag.HIDE_POTION_EFFECTS);
+                if (event instanceof PotionEvent potionEvent){
+                    item = potionEvent.createItemForInv();
                 }
             }
 
             case "unlockheadmovement" -> {
                 if (event instanceof UnLockHeadMovementEvent unLockHeadMovementEvent){
-                    item = itemCreate(Material.GOLDEN_HELMET,
-                            "&6UnLockHeadMovement",
-                            List.of(
-                                    "",
-                                    "&#3F9AAEIndex &#3F9AAE: &#F6CE71" + unLockHeadMovementEvent.getIndex()
-                            ),false, ItemFlag.HIDE_ATTRIBUTES);
+                    item = unLockHeadMovementEvent.createItemForInv();
                 }
             }
 
             case "unlockmovement" -> {
-                if (event instanceof UnLockMovementEvent UnLockMovementEvent){
-                    item = itemCreate(Material.GOLDEN_BOOTS,
-                            "&6UnLockMovement",
-                            List.of(
-                                    "",
-                                    "&#3F9AAEIndex &#3F9AAE: &#F6CE71" + UnLockMovementEvent.getIndex()
-                            ),false, ItemFlag.HIDE_ATTRIBUTES);
+                if (event instanceof UnLockMovementEvent unLockMovementEvent){
+                    item = unLockMovementEvent.createItemForInv();
                 }
             }
 
             case "unfly" -> {
                 if (event instanceof UnFlyEvent unFlyEvent){
-                    item = itemCreate(Material.ANVIL,
-                            "&6UnFly",
-                            List.of(
-                                    "",
-                                    "&#3F9AAEIndex &#3F9AAE: &#F6CE71" + unFlyEvent.getIndex()
-                            ));
+                    item = unFlyEvent.createItemForInv();
                 }
             }
 
             case "clearinventory" -> {
                 if (event instanceof ClearInventoryEvent clearInventoryEvent){
-                    item = itemCreate(Material.CAMPFIRE,
-                            "&6ClearInventory",
-                            List.of(
-                                    "",
-                                    "&#3F9AAEIndex &#3F9AAE: &#F6CE71" + clearInventoryEvent.getIndex()
-                            ));
+                    item = clearInventoryEvent.createItemForInv();
                 }
             }
 
             case "ungodmode" -> {
-                if (event instanceof  UnGodEvent unGodEvent){
-                    item = itemCreate(Material.DRAGON_BREATH,
-                            "&6UnGod",
-                            List.of(
-                                    "",
-                                    "&#3F9AAEIndex &#3F9AAE: &#F6CE71" + unGodEvent.getIndex()
-                            ));
+                if (event instanceof UnGodEvent unGodEvent){
+                    item = unGodEvent.createItemForInv();
                 }
             }
 
             case "giveitem" -> {
-                if (event instanceof  GiveItemEvent giveItemEvent){
-                    item = itemCreate(Material.BEACON,
-                            "&6GiveItem",
-                            List.of(
-                                    "",
-                                    "&#3F9AAEIndex &#3F9AAE: &#F6CE71" + giveItemEvent.getIndex(),
-                                    "&#3F9AAEItem &#3F9AAE: &#F6CE71" + giveItemEvent.getItemName(),
-                                    "&#3F9AAEAmount &#3F9AAE: &#F6CE71" + giveItemEvent.getAmount()
-                            ));
+                if (event instanceof GiveItemEvent giveItemEvent){
+                    item = giveItemEvent.createItemForInv();
                 }
             }
 

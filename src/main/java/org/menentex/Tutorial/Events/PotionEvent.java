@@ -1,11 +1,16 @@
 package org.menentex.Tutorial.Events;
 
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.menentex.Tutorial.Messages;
 import org.menentex.Tutorial.Utils.Utils;
+
+import java.util.List;
 
 public class PotionEvent extends TutorialEvents{
 
@@ -85,6 +90,18 @@ public class PotionEvent extends TutorialEvents{
         long time = section.getLong("time");
 
         return new PotionEvent(index, potion, level, time);
+    }
+
+    @Override
+    public ItemStack createItemForInv(){
+        return Utils.itemCreate(Material.POTION,
+                "&6Potion",
+                List.of(
+                        "",
+                        "&#3F9AAEIndex &#3F9AAE: &#F6CE71" + getIndex(),
+                        "&#3F9AAEPotion &#3F9AAE: &#F6CE71" + getPotionName(),
+                        "&#3F9AAEDuration &#3F9AAE: &#F6CE71" + Utils.formatTick(getTime())
+                ), false, ItemFlag.HIDE_ITEM_SPECIFICS);
     }
 
 }

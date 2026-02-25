@@ -21,6 +21,7 @@ import org.menentex.Tutorial.DataManager.Player.PlayerStateManager;
 import org.menentex.Tutorial.Dependencie.ProtocollibDepend;
 import org.menentex.Tutorial.Listener.*;
 import org.menentex.Tutorial.Tasks.GuiTaskManager;
+import org.menentex.Tutorial.Utils.UpdateChecker;
 
 import java.io.File;
 import java.io.IOException;
@@ -65,7 +66,9 @@ public class Main extends JavaPlugin {
             getLogger().info("PlaceholderAPI detected successfully.");
 
         initBstats();
-
+        messageConfig = loadYaml("message.yml");
+        new Messages();
+        new UpdateChecker(this, 132904).check();
         registryGui = new RegistryGui();
         editorStateManager = new EditorStateManager();
         actionEditorState = new ActionEditorState();
@@ -74,10 +77,8 @@ public class Main extends JavaPlugin {
         eventListMananger = new EventListMananger();
         saveDefaultConfig();
         reloadConfig();
-        messageConfig = loadYaml("message.yml");
         loadTutorials();
         blockedCommandConfig = loadYaml("blockedcommand.yml");
-        new Messages();
         registerCommands();
         registerEvents();
         GuiLoader.loadGuisToRegistry(registryGui);
