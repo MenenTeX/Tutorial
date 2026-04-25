@@ -1,6 +1,7 @@
 package org.menentex.Tutorial.Events;
 
 import me.clip.placeholderapi.PlaceholderAPI;
+import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -8,9 +9,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.menentex.Tutorial.Utils.Utils;
 
+import java.time.Duration;
 import java.util.List;
 
-public class TitleEvent extends TutorialEvents{
+public class TitleEvent extends TutorialEvent {
 
     private final String title;
     private final String subtitle;
@@ -26,26 +28,6 @@ public class TitleEvent extends TutorialEvents{
         this.duration = duration;
         this.fadeIn = fadeIn;
         this.fadeOut = fadeOut;
-    }
-
-    public String getTitle(){
-        return title;
-    }
-
-    public String getSubtitle() {
-        return subtitle;
-    }
-
-    public int getDuration() {
-        return duration;
-    }
-
-    public int getFadeIn() {
-        return fadeIn;
-    }
-
-    public int getFadeOut() {
-        return fadeOut;
     }
 
     @Override
@@ -69,13 +51,18 @@ public class TitleEvent extends TutorialEvents{
         finalTitle = Utils.applyPlaceholders(title, Utils.placeholders(player, player.getWorld(), Bukkit.getServer().getName()));
         finalSubtitle = Utils.applyPlaceholders(subtitle, Utils.placeholders(player, player.getWorld(), Bukkit.getServer().getName()));
 
-        player.sendTitle(
-                Utils.colorize(finalTitle),
-                Utils.colorize(finalSubtitle),
-                (int) (long) fadeIn,
-                (int) (long) duration,
-                (int) (long) fadeOut
+        player.showTitle(
+                Title.title(
+                        Utils.colorize(finalTitle),
+                        Utils.colorize(finalSubtitle),
+                        Title.Times.times(
+                                Duration.ofMillis(fadeIn * 50L),
+                                Duration.ofMillis(duration * 50L),
+                                Duration.ofMillis(fadeOut * 50L)
+                        )
+                )
         );
+
     }
 
     @Override
@@ -110,13 +97,13 @@ public class TitleEvent extends TutorialEvents{
                 "&6Title",
                 List.of(
                         "",
-                        "&#3F9AAEIndex &#3F9AAE: &#F6CE71" + getIndex(),
-                        "&#3F9AAEDuration &#3F9AAE: &#F6CE71" + Utils.formatTick(getDuration()),
-                        "&#3F9AAETitle &#3F9AAE: &#F6CE71" + getTitle(),
-                        "&#3F9AAESubtitle &#3F9AAE: &#F6CE71" + getSubtitle(),
-                        "&#3F9AAEFadeIn &#3F9AAE: &#F6CE71" + Utils.formatTick(getFadeIn()),
-                        "&#3F9AAEFadeOut &#3F9AAE: &#F6CE71" + Utils.formatTick(getFadeOut())
-                ));
+                        "&#3F9AAEIndex &#3F9AAE: &#F6CE71" + index,
+                        "&#3F9AAEDuration &#3F9AAE: &#F6CE71" + Utils.formatTick(duration),
+                        "&#3F9AAETitle &#3F9AAE: &#F6CE71" + title,
+                        "&#3F9AAESubtitle &#3F9AAE: &#F6CE71" + subtitle,
+                        "&#3F9AAEFadeIn &#3F9AAE: &#F6CE71" + Utils.formatTick(fadeIn),
+                        "&#3F9AAEFadeOut &#3F9AAE: &#F6CE71" + Utils.formatTick(fadeOut)
+                ), false);
     }
 
 

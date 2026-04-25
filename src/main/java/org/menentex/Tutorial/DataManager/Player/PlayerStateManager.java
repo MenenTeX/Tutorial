@@ -1,6 +1,9 @@
 package org.menentex.Tutorial.DataManager.Player;
 
 import org.bukkit.entity.Player;
+import org.menentex.Tutorial.DataManager.EventListMananger;
+import org.menentex.Tutorial.DataManager.Gui.InMemoryGui;
+import org.menentex.Tutorial.Main;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -15,6 +18,34 @@ public class PlayerStateManager {
         states.put(player.getUniqueId(), state);
 
         guiToStates.computeIfAbsent(guiName, k -> ConcurrentHashMap.newKeySet()).add(state);
+        EventListMananger e = Main.getInstance().getEventListMananger();
+        InMemoryGui gui = Main.getInstance().getRegistryGui().getGui(guiName).orElse(null);
+        if (gui == null) return;
+
+        if (gui.getLockMovement()) {
+            e.addMovementLock(player);
+        }
+        if (gui.getLockHeadMovement()) {
+            e.addHeadMovementLock(player);
+        }
+        if (gui.getDamageProtection()) {
+            e.addDamageProtection(player);
+        }
+        if (gui.getDisableSendChat()) {
+            e.addDisableSendChat(player);
+        }
+        if (gui.getNormalInvisible()) {
+            e.addNormalInvisibility(player);
+        }
+        if (gui.getProInvisible()) {
+            e.addProInvisibility(player);
+        }
+        if (gui.getDisablePlayerInteract()){
+            e.addDisablePlayerInteract(player, gui.getInteract());
+        }
+        if (gui.getDisableSendChat()){
+            e.addDisableSendChat(player);
+        }
     }
 
     public Optional<PlayerState> getState(Player player){

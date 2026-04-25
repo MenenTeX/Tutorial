@@ -50,9 +50,13 @@ create-event: "&a✔ Event &6%event% &acreated successfully!"
 
 exit-command: "&e✔ You have exited the tutorial."
 
-notintutorial: "&c✖ You are not currently in a tutorial."
+not-in-tutorial: "&c✖ You are not currently in a tutorial."
+
+tutorial-empty: "&cThis tutorial is empty."
 
 not-found-tutorial: "&c✖ Tutorial &6%tutorial% &cnot found!"
+
+blocked-command: "&c✖ This command is blocked."
 
 help:
 
@@ -64,7 +68,7 @@ help:
     - "&7Please enter the actionMessage."
     - "&7If you want the message to be empty, leave -"
 
-  actionbar-duration:
+  duration:
     - "&7Enter the duration (example: &e5s &7or &e5m &7)."
 
   title-title:
@@ -86,12 +90,12 @@ help:
   console-command:
     - "&7Enter a command to execute:"
     - "&7Placeholders supported via &ePlaceholderAPI"
-    - "&7Example: &e/kill %player%"
+    - "&7Example: &ekill %player%"
 
   player-command:
     - "&7Enter a command to execute:"
     - "&7Placeholders supported via &ePlaceholderAPI"
-    - "&7Example: &e/kill %player%"
+    - "&7Example: &ekill %player%"
 
   play-sound-name:
     - "&7Provide a sound name to play."
@@ -124,7 +128,6 @@ help:
 
   teleport-location:
     - "&7Provide the teleport location using this format:"
-    - ""
     - "&6X&7, &6Y&7, &6Z&7, &6Yaw&7, &6Pitch &7(example: 100, 64, -200, 0, 90)"
     - "&6X&7, &6Y&7, &6Z&7 &7(example: 100, 64, -200)"
 
@@ -134,3 +137,18 @@ help:
   event-playerinteract:
     - "&7Please enter input like this:"
     - "&6Right&7, &6Left&7, &6Both&7, &6Disable"
+
+  yaw-pitch:
+    - "&7Enter the Yaw & Pitch"
+    - "&6Yaw&7, &6Pitch &7(example: 100, 64)"
+
+  bossbar-barcolor:
+    - "&7Enter BarColor (RED, BLUE, GREEN, YELLOW, PURPLE, WHITE)"
+
+  bossbar-barstyle:
+    - "&7Enter BarStyle (PROGRESS, NOTCHED_6, NOTCHED_10, NOTCHED_12, NOTCHED_20)"
+
+  direction:
+    - "&7Enter the direction"
+    - "&7Example &8( &6X &e, &6Y &e, &6Z &8)"
+    - "&8( &6NEGATIVE_X &e, &6NEGATIVE_Y &e, &6NEGATIVE_Z &8)"

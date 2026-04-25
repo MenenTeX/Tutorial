@@ -44,18 +44,14 @@ public class EditorCommands implements CommandExecutor {
         if (!(Utils.hasPermission(player, false, Permissions.ADMIN, Permissions.EDIT))) return true;
 
         if (args.length < 2 || args.length > 3){
-            for (String msg : Messages.HELP){
-                player.sendMessage(msg);
-            }
+            Utils.sendMessageComponent(player, Messages.HELP);
             return true;
         }
 
         String guiName = args[1];
 
         if (guiName == null || guiName.isEmpty()) {
-            for (String msg : Messages.HELP) {
-                player.sendMessage(msg);
-            }
+            Utils.sendMessageComponent(player, Messages.HELP);
             return true;
         }
 
@@ -71,7 +67,6 @@ public class EditorCommands implements CommandExecutor {
                 gui.buildRemainingPages(registryGui);
 
                 long lastPage = Math.max(1, gui.countActionLists());
-
                 int intLastPage = (int) lastPage;
 
                 gui.open(player, GuiKeys.ACTION_LIST + lastPage);
@@ -81,24 +76,23 @@ public class EditorCommands implements CommandExecutor {
                 if (!editorStateManager.isInEditor(player))
                     editorStateManager.enter(player, guiName, GuiKeys.ACTION_LIST + intLastPage);
 
-                editorStateManager.getState(player).ifPresent(editorState -> editorState.setCurrentPage(intLastPage));
+                editorStateManager.getState(player)
+                        .ifPresent(editorState -> editorState.setCurrentPage(intLastPage));
 
             } else {
-                if (args[0].equalsIgnoreCase("exit")){
-                    player.sendMessage(Utils.colorize("&cYou can't use this name"));
+                if (args[1].equalsIgnoreCase("exit")){
+                    Utils.sendMessagePrefixString(player, "&cYou can't use this name");
                     return true;
                 }
+
                 InMemoryGui gui = new InMemoryGui(guiName);
 
-                String msg = Messages.Usage.CREATE_TUTORIAL;
-                msg = msg.replace("%tutorial%", guiName);
-                player.sendMessage(msg);
+                player.sendMessage(Utils.applyPlaceholder(Messages.Usage.CREATE_TUTORIAL, "%tutorial%", guiName));
 
                 gui.createDefaultInventory();
                 registryGui.registerGui(gui);
 
                 EditorStateManager editorStateManager = Main.getInstance().getEditorStateManager();
-
                 editorStateManager.enter(player, guiName, GuiKeys.ACTION_LIST + 1);
 
                 gui.open(player, GuiKeys.ACTION_LIST + 1);
@@ -116,21 +110,22 @@ public class EditorCommands implements CommandExecutor {
                         editorStateManager.exit(p);
                     }
                 }
+
                 InMemoryGui gui = registryGui.getGui(guiName).orElse(null);
                 if (gui == null) return true;
+
                 gui.deleteGuiFromYML(true);
                 registryGui.removeGui(guiName);
-                String msg = Messages.Usage.DELETE_TUTORIAL;
-                msg = msg.replace("%tutorial%", guiName);
-                player.sendMessage(msg);
+
+                player.sendMessage(Utils.applyPlaceholder(Messages.Usage.DELETE_TUTORIAL, "%tutorial%", guiName));
+
             } else {
-                String msg = Messages.Usage.NOT_FOUND;
-                msg = msg.replace("%tutorial%", guiName);
-                player.sendMessage(msg);
+                player.sendMessage(Utils.applyPlaceholder(Messages.Usage.NOT_FOUND, "%tutorial%", guiName));
                 return true;
             }
 
-        } else if (args[0].equalsIgnoreCase("open")){
+        } else if (args[0].equalsIgnoreCase("open")) {
+
             if (registryGui.exists(guiName)){
 
                 InMemoryGui gui = registryGui.getGui(guiName).orElse(null);
@@ -138,36 +133,34 @@ public class EditorCommands implements CommandExecutor {
 
                 long lastPage = Math.max(1, gui.countActionLists());
                 gui.open(player, GuiKeys.ACTION_LIST + lastPage);
+
             } else {
-                String msg = Messages.Usage.NOT_FOUND;
-                msg = msg.replace("%tutorial%", guiName);
-                player.sendMessage(msg);
+                player.sendMessage(Utils.applyPlaceholder(Messages.Usage.NOT_FOUND, "%tutorial%", guiName));
                 return true;
             }
-        } else if (args[0].equalsIgnoreCase("save")){
+
+        } else if (args[0].equalsIgnoreCase("save")) {
+
             if (registryGui.exists(guiName)){
                 InMemoryGui gui = registryGui.getGui(guiName).orElse(null);
                 if (gui == null) return true;
 
                 gui.saveToConfigSectionAsync();
-                String msg = Messages.Usage.SAVE_TUTORIAL;
-                msg = msg.replace("%tutorial%", guiName);
-                player.sendMessage(msg);
+
+                player.sendMessage(Utils.applyPlaceholder(Messages.Usage.SAVE_TUTORIAL, "%tutorial%", guiName));
+
             } else {
-                String msg = Messages.Usage.NOT_FOUND;
-                msg = msg.replace("%tutorial%", guiName);
-                player.sendMessage(msg);
+                player.sendMessage(Utils.applyPlaceholder(Messages.Usage.NOT_FOUND, "%tutorial%", guiName));
                 return true;
             }
-        }
 
-
-        else {
-            for (String msg : Messages.HELP)
-                player.sendMessage(msg);
+        } else {
+            Utils.sendMessageComponent(player, Messages.HELP);
             return true;
         }
+
         return true;
     }
+
 
 }

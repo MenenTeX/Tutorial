@@ -5,13 +5,13 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.menentex.Tutorial.DataManager.Gui.EventListMananger;
+import org.menentex.Tutorial.DataManager.EventListMananger;
 import org.menentex.Tutorial.Main;
 import org.menentex.Tutorial.Utils.Utils;
 
 import java.util.List;
 
-public class LockHeadMovementEvent extends TutorialEvents{
+public class LockHeadMovementEvent extends TutorialEvent {
 
     public LockHeadMovementEvent(int index){
         super(index);

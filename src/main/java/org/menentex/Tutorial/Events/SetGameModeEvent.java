@@ -9,7 +9,7 @@ import org.menentex.Tutorial.Utils.Utils;
 
 import java.util.List;
 
-public class SetGameModeEvent extends TutorialEvents{
+public class SetGameModeEvent extends TutorialEvent {
 
     private final GameMode gameMode;
 
@@ -62,7 +62,7 @@ public class SetGameModeEvent extends TutorialEvents{
                         "",
                         "&#3F9AAEIndex &#3F9AAE: &#F6CE71" + getIndex(),
                         "&#3F9AAEGameMode &#3F9AAE: &#F6CE71" + getGameMode().name()
-                ));
+                ), false);
     }
 
 

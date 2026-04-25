@@ -5,7 +5,7 @@
 
   ### Guide Your Players With This Plugin
 
-  [![Version](https://img.shields.io/badge/version-0.0.1--BETA-blue.svg)](https://github.com/MenenTeX/Tutorial)
+  [![Version](https://img.shields.io/badge/version-0.0.2--BETA-blue.svg)](https://github.com/MenenTeX/Tutorial)
 
   **TutorialCreator is a powerful and user-friendly Spigot plugin that lets you easily teach and guide your players through your server**
 
@@ -31,7 +31,7 @@ The plugin operates entirely through inventory-based interfaces, providing a cle
 - **🎯 Engaging Events – Includes a variety of interactive and exciting events to enhance player engagement**
 - **🤝 User-Friendly – Designed with simplicity in mind, making it easy for both administrators and players to use.**
 - **⚡ Easy Installation – Quick setup process with minimal configuration required.**
-- **🎮 20+ Built-in Events – Comes with over twenty ready-to-use events to create dynamic server experiences.**
+- **🎮 30 Built-in Events – Comes with over twenty ready-to-use events to create dynamic server experiences.**
 - **🔌 No Dependencies Required – Works completely standalone with no external plugins needed.**
 - **💎 100% Free – Completely free to use with no restrictions.**
 
@@ -63,17 +63,17 @@ The plugin operates entirely through inventory-based interfaces, providing a cle
 
 📚 **Commands**
 
-| Commands                              | Description                                         |
-| ------------------------------------- | ----------------------------------------------------|
-| **/tutoedit create <tutorialName>**   | Create tutorial                                     |
-| **/tutoedit delete <tutorialName>**   | Delete tutorial                                     |
-| **/tutoedit save <tutorialName>**     | All actions and settings are saved in tutorials.yml |
-| **/tutoedit reload <tutorialName>**   | Reload all .yml files                               |
-| **/tutoedit open <tutorialName>**     | Open the tutorial menu                              |
-| **/tutorial <tutorialName>**          | Starts the specified tutorial for the player        |
-| **/tutorial <tutorialName> <target>** | Starts the specified tutorial for the player        |
-| **/exit**                             | Exit from tutorial                                  |
-| **/tutorial exit**                    | Exit from tutorial                                  |
+| Commands                            | Description                                         |
+| ----------------------------------- |-----------------------------------------------------|
+| `/tutoedit create <tutorialName>`   | Create tutorial                                     |
+| `/tutoedit delete <tutorialName>`   | Delete tutorial                                     |
+| `/tutoedit save <tutorialName>`     | All actions and settings are saved in tutorials.yml |
+| `/tutoedit reload <tutorialName>`   | Reload all .yml files                               |
+| `/tutoedit open <tutorialName>`     | Open the tutorial menu                              |
+| `/tutorial <tutorialName>`          | Starts the specified tutorial for the player        |
+| `/tutorial <tutorialName> <target>` | Starts the specified tutorial for the player        |
+| `/exit`                             | Exit from tutorial                                  |
+| `/tutorial exit`                    | Exit from tutorial                                  |
 
 
 ## 🤝 Contributing

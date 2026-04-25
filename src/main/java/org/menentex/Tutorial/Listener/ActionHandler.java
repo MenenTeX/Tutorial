@@ -1,12 +1,16 @@
 package org.menentex.Tutorial.Listener;
 
-import org.bukkit.*;
+import net.kyori.adventure.bossbar.BossBar;
+import org.bukkit.GameMode;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.potion.PotionEffectType;
 import org.menentex.Tutorial.DataManager.Gui.InMemoryGui;
 import org.menentex.Tutorial.DataManager.Gui.RegistryGui;
 import org.menentex.Tutorial.Events.*;
 import org.menentex.Tutorial.Main;
-
+import org.menentex.Tutorial.Utils.Utils;
 
 
 public class ActionHandler {
@@ -23,6 +27,11 @@ public class ActionHandler {
 
 
     /* ===================== SIMPLE ACTIONS ===================== */
+
+    public void createSetRotation(String guiName, float yaw, float pitch){
+        InMemoryGui gui = getGui(guiName);
+        gui.addEvent(new SetRotationEvent(gui.getEvents().size(), yaw, pitch));
+    }
 
     public void createMessage(String guiName, String message) {
         InMemoryGui gui = getGui(guiName);
@@ -55,6 +64,31 @@ public class ActionHandler {
     }
 
     /* ===================== COMPLEX ACTIONS ===================== */
+
+    public void createStrikeLightning(String guiName, Location location){
+        InMemoryGui gui = getGui(guiName);
+        gui.addEvent(new StrikeLightningEvent(gui.getEvents().size(), location));
+    }
+
+    public void createVector(String guiName, Utils.Direction direction, float multiply, float strength){
+        InMemoryGui gui = getGui(guiName);
+        gui.addEvent(new PushEvent(gui.getEvents().size(), direction, multiply, strength));
+    }
+
+    public void createBossBar(String guiName, String barMessage, BossBar.Overlay barStyle, BossBar.Color barColor, long duration){
+        InMemoryGui gui = getGui(guiName);
+        gui.addEvent(new BossBarEvent(gui.getEvents().size(), barMessage, barStyle, barColor, duration));
+    }
+
+    public void createCinematic(String guiName, Location from, Location to, float yaw, float pitch, long duration){
+        InMemoryGui gui = getGui(guiName);
+        gui.addEvent(new CinematicEvent(gui.getEvents().size(), from, to, yaw, pitch, duration));
+    }
+
+    public void createWaitRegionEnter(String guiName, Location pos1, Location pos2){
+        InMemoryGui gui = getGui(guiName);
+        gui.addEvent(new WaitRegionEnterEvent(gui.getEvents().size(), new CuboidRegion(pos1, pos2), guiName));
+    }
 
     public void createTitle(String guiName, String title, String subtitle, int fadeIn, int duration, int fadeOut) {
         InMemoryGui gui = getGui(guiName);

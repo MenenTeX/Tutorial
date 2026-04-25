@@ -5,18 +5,17 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.menentex.Tutorial.DataManager.Gui.EventListMananger;
+import org.menentex.Tutorial.DataManager.EventListMananger;
 import org.menentex.Tutorial.Main;
 import org.menentex.Tutorial.Utils.Utils;
 
 import java.util.List;
 
-public class GodModeEvent extends TutorialEvents{
+public class GodModeEvent extends TutorialEvent {
 
-    public GodModeEvent(int index){
+    public GodModeEvent(int index) {
         super(index);
     }
-
 
     @Override
     public void execute(Player player) {
@@ -27,7 +26,7 @@ public class GodModeEvent extends TutorialEvents{
     }
 
     @Override
-    public String getDisplayName(){
+    public String getDisplayName() {
         return "GodMode";
     }
 
@@ -37,13 +36,13 @@ public class GodModeEvent extends TutorialEvents{
     }
 
     @Override
-    public ItemStack createItemForInv(){
+    public ItemStack createItemForInv() {
         return Utils.itemCreate(Material.LEATHER_CHESTPLATE,
                 "&6Godmode",
                 List.of(
                         "",
                         "&#3F9AAEIndex &#3F9AAE: &#F6CE71" + getIndex()
-                ),false, ItemFlag.HIDE_ATTRIBUTES
+                ), false, ItemFlag.HIDE_ATTRIBUTES
         );
     }
 }

@@ -52,3 +52,15 @@ timeout-enter-event:
 
   # Time allowed to configure item rewards.
   giveitem: 30
+
+  # Time allowed to configure region location input.
+  cinematic: 60
+
+  # Time allowed to configure region location input.
+  wait-region-enter: 60
+
+  # Time allowed to configure a bossbar
+  bossbar: 60
+
+  strike-lightning: 30
+

@@ -26,6 +26,12 @@ public class ActionManager {
         TELEPORT_EXIT,
         VILLAGER_SPAWN,
         PERMISSION,
-        EVENT_PLAYERINTERACT
+        EVENT_PLAYERINTERACT,
+        WAIT_REGION_ENTER,
+        CINEMATIC,
+        BOSS_BAR,
+        SETROTATION,
+        VECTOR,
+        STRIKE_LIGHTNING
     }
 }

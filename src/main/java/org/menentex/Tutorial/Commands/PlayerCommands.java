@@ -1,15 +1,10 @@
 package org.menentex.Tutorial.Commands;
 
-import net.kyori.adventure.text.Component;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.potion.PotionEffect;
-import org.menentex.Tutorial.DataManager.Gui.EventListMananger;
 import org.menentex.Tutorial.DataManager.Gui.InMemoryGui;
 import org.menentex.Tutorial.DataManager.Gui.RegistryGui;
 import org.menentex.Tutorial.DataManager.Player.PlayerState;
@@ -56,27 +51,23 @@ public class PlayerCommands implements CommandExecutor {
 
             stateManager.endTutorial(player.getUniqueId());
 
-            for (PotionEffect effect : player.getActivePotionEffects()) {
-                player.removePotionEffect(effect.getType());
-            }
+            GuiTask task = Main.getInstance().getGuiTaskManager().getTaskForGui(gui.getGuiName());
+            if (task != null) task.endTutorial(player, gui);
 
             player.sendMessage(Messages.Usage.EXIT_COMMAND);
             return true;
         }
 
+
         if (!(args.length > 0 && args.length < 3)){
-            for (String msg : Messages.HELP){
-                player.sendMessage(msg);
-            }
+            Utils.sendMessageComponent(player, Messages.HELP);
             return true;
         }
 
         String guiName = args[0];
 
         if (guiName == null || guiName.isEmpty()) {
-            for (String msg : Messages.HELP) {
-                player.sendMessage(msg);
-            }
+            Utils.sendMessageComponent(player, Messages.HELP);
             return true;
         }
 
@@ -99,8 +90,19 @@ public class PlayerCommands implements CommandExecutor {
                 }
             }
 
+            if (gui.getEvents().isEmpty()){
+                Utils.sendMessageComponent(player, Messages.Usage.TUTORIAL_EMPTY);
+                return true;
+            }
+
             PlayerStateManager playerStateManager = Main.getInstance().getPlayerStateManager();
             GuiTaskManager guiTaskManager = Main.getInstance().getGuiTaskManager();
+
+            if (playerStateManager.inState(player)){
+                player.sendMessage(
+                        Utils.applyPlaceholder(Messages.Usage.ALREADY_TUTORIAL, "%tutorial%", guiName)
+                );
+            }
 
             if (guiTaskManager.isRunning(guiName)){
                 playerStateManager.startTutorial(target, guiName);
@@ -109,16 +111,6 @@ public class PlayerCommands implements CommandExecutor {
                 GuiTask guiTask = new GuiTask(guiName, playerStateManager, registryGui);
                 guiTask.runTaskTimer(Main.getInstance(), 0L, 1L);
                 guiTaskManager.register(guiName, guiTask);
-
-                EventListMananger e = Main.getInstance().getEventListMananger();
-
-                if (gui.getLockMovement()) e.addMovementLock(target);
-                if (gui.getLockHeadMovement()) e.addHeadMovementLock(target);
-                if (gui.getDamageProtection()) e.addDamageProtection(target);
-                if (gui.getDisableSendChat()) e.addDisableSendChat(target);
-                if (gui.getNormalInvisible()) e.addNormalInvisibility(target);
-                if (gui.getProInvisible()) e.addProInvisibility(target);
-                if (gui.getDisablePlayerInteract()) e.addDisablePlayerInteract(target, gui.getInteract());
             }
 
         } else if (args[0].equalsIgnoreCase("exit")){
@@ -143,10 +135,6 @@ public class PlayerCommands implements CommandExecutor {
 
             if (!gui.getAllowExitCommand())
                 return true;
-
-            for (PotionEffect effect : player.getActivePotionEffects()) {
-                player.removePotionEffect(effect.getType());
-            }
 
             stateManager.endTutorial(player.getUniqueId());
 

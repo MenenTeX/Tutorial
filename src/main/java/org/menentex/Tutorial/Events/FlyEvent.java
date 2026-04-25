@@ -8,7 +8,7 @@ import org.menentex.Tutorial.Utils.Utils;
 
 import java.util.List;
 
-public class FlyEvent extends TutorialEvents{
+public class FlyEvent extends TutorialEvent {
 
     public FlyEvent(int index){
         super(index);
@@ -38,7 +38,7 @@ public class FlyEvent extends TutorialEvents{
                 List.of(
                         "",
                         "&#3F9AAEIndex &#3F9AAE: &#F6CE71" + getIndex()
-                ));
+                ), false);
     }
 
 }

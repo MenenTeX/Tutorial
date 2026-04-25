@@ -3,7 +3,7 @@ package org.menentex.Tutorial.DataManager.Gui;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
-import org.menentex.Tutorial.Events.TutorialEvents;
+import org.menentex.Tutorial.Events.TutorialEvent;
 import org.menentex.Tutorial.Main;
 import org.menentex.Tutorial.Utils.Utils;
 
@@ -14,8 +14,8 @@ import java.util.Map;
 
 public class GuiLoader {
 
-    private static Map<String, List<TutorialEvents>> loadAllTutorials() {
-        Map<String, List<TutorialEvents>> tutorials = new HashMap<>();
+    private static Map<String, List<TutorialEvent>> loadAllTutorials() {
+        Map<String, List<TutorialEvent>> tutorials = new HashMap<>();
 
         ConfigurationSection root = Main.getInstance().getTutorialsConfig()
                 .getConfigurationSection("tutorials");
@@ -26,14 +26,14 @@ public class GuiLoader {
             ConfigurationSection guiSection = root.getConfigurationSection(guiName);
             if (guiSection == null) continue;
 
-            List<TutorialEvents> events = new ArrayList<>();
+            List<TutorialEvent> events = new ArrayList<>();
             ConfigurationSection eventsSection = guiSection.getConfigurationSection("events");
             if (eventsSection != null) {
                 for (String key : eventsSection.getKeys(false)) {
                     ConfigurationSection eventSection = eventsSection.getConfigurationSection(key);
                     if (eventSection == null) continue;
 
-                    TutorialEvents event = TutorialEvents.deserialize(eventSection);
+                    TutorialEvent event = TutorialEvent.deserialize(eventSection);
                     if (event != null) {
                         events.add(event);
                     }
@@ -47,11 +47,11 @@ public class GuiLoader {
     }
 
     public static void loadGuisToRegistry(RegistryGui registry) {
-        Map<String, List<TutorialEvents>> tutorials = GuiLoader.loadAllTutorials();
+        Map<String, List<TutorialEvent>> tutorials = GuiLoader.loadAllTutorials();
 
-        for (Map.Entry<String, List<TutorialEvents>> entry : tutorials.entrySet()) {
+        for (Map.Entry<String, List<TutorialEvent>> entry : tutorials.entrySet()) {
             String guiName = entry.getKey();
-            List<TutorialEvents> events = entry.getValue();
+            List<TutorialEvent> events = entry.getValue();
 
             InMemoryGui gui = new InMemoryGui(guiName);
 
@@ -87,7 +87,7 @@ public class GuiLoader {
                 }
             }
 
-            for (TutorialEvents event : events) {
+            for (TutorialEvent event : events) {
                 gui.addEvent(event);
             }
 

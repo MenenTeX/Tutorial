@@ -9,11 +9,15 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.menentex.Tutorial.Commands.Permissions;
-import org.menentex.Tutorial.DataManager.Gui.*;
+import org.menentex.Tutorial.DataManager.EventListMananger;
+import org.menentex.Tutorial.DataManager.Gui.GuiInventoryHolder;
+import org.menentex.Tutorial.DataManager.Gui.GuiKeys;
+import org.menentex.Tutorial.DataManager.Gui.InMemoryGui;
+import org.menentex.Tutorial.DataManager.Gui.RegistryGui;
 import org.menentex.Tutorial.DataManager.InventoryBuilder;
 import org.menentex.Tutorial.DataManager.Player.EditorState;
 import org.menentex.Tutorial.DataManager.Player.EditorStateManager;
-import org.menentex.Tutorial.Events.TutorialEvents;
+import org.menentex.Tutorial.Events.TutorialEvent;
 import org.menentex.Tutorial.Main;
 import org.menentex.Tutorial.Utils.Utils;
 
@@ -41,8 +45,8 @@ public class OpenInventoryHandler implements Listener {
 
         RegistryGui registryGui = Main.getInstance().getRegistryGui();
 
-        String inventoryId = holder.getInventoryKey();
-        String guiName = holder.getGuiName();
+        String inventoryId = holder.inventoryKey();
+        String guiName = holder.guiName();
 
         long lastPage = Math.max(
                 1,
@@ -70,8 +74,8 @@ public class OpenInventoryHandler implements Listener {
 
             if (nextPageMeta == null || previousPageMeta == null) return;
 
-            nextPageMeta.setLore(List.of(Utils.colorize("&7Page : " + currentPage + "&2/&7" + lastPage)));
-            previousPageMeta.setLore(List.of(Utils.colorize("&7Page : " + currentPage + "&4/&7" + lastPage)));
+            nextPageMeta.lore(List.of(Utils.colorize("&7Page : " + currentPage + "&2/&7" + lastPage)));
+            previousPageMeta.lore(List.of(Utils.colorize("&7Page : " + currentPage + "&4/&7" + lastPage)));
 
             nextPageItem.setItemMeta(nextPageMeta);
             previousPageItem.setItemMeta(previousPageMeta);
@@ -80,27 +84,26 @@ public class OpenInventoryHandler implements Listener {
             registryGui.getGui(guiName).ifPresent(gui -> {
                 boolean normalInvisible = gui.getNormalInvisible();
                 if (normalInvisible){
-                    openedInv.setItem(21, Utils.itemCreate(Material.LIME_DYE, "&aEnable"));
+                    openedInv.setItem(21, Utils.itemCreate(Material.LIME_DYE, "&aEnable", null, false));
                 } else {
-                    openedInv.setItem(21, Utils.itemCreate(Material.GRAY_DYE, "&cDisable"));
+                    openedInv.setItem(21, Utils.itemCreate(Material.GRAY_DYE, "&cDisable", null, false));
                 }
 
-                boolean disablePlayerInteract = gui.getDisablePlayerInteract();
                 if (gui.getInteract() == EventListMananger.Player_Interact.RIGHT)
-                    openedInv.setItem(22, Utils.itemCreate(Material.LIME_DYE, "&aRight Click Blocked"));
+                    openedInv.setItem(22, Utils.itemCreate(Material.LIME_DYE, "&aRight Click Blocked", null, false));
                 else if (gui.getInteract() == EventListMananger.Player_Interact.LEFT)
-                    openedInv.setItem(22, Utils.itemCreate(Material.LIME_DYE, "&aLeft Click Blocked"));
+                    openedInv.setItem(22, Utils.itemCreate(Material.LIME_DYE, "&aLeft Click Blocked", null, false));
                 else if (gui.getInteract() == EventListMananger.Player_Interact.BOTH)
-                    openedInv.setItem(22, Utils.itemCreate(Material.LIME_DYE, "&aBoth Click Blocked"));
+                    openedInv.setItem(22, Utils.itemCreate(Material.LIME_DYE, "&aBoth Click Blocked", null, false));
                 else
-                    openedInv.setItem(22, Utils.itemCreate(Material.GRAY_DYE, "&cDisable"));
+                    openedInv.setItem(22, Utils.itemCreate(Material.GRAY_DYE, "&cDisable", null, false));
 
 
                 boolean proInvisible = gui.getProInvisible();
                 if (proInvisible){
-                    openedInv.setItem(23, Utils.itemCreate(Material.LIME_DYE, "&aEnable"));
+                    openedInv.setItem(23, Utils.itemCreate(Material.LIME_DYE, "&aEnable", null, false));
                 } else {
-                    openedInv.setItem(23, Utils.itemCreate(Material.GRAY_DYE, "&cDisable"));
+                    openedInv.setItem(23, Utils.itemCreate(Material.GRAY_DYE, "&cDisable", null, false));
                 }
             });
         }
@@ -112,37 +115,37 @@ public class OpenInventoryHandler implements Listener {
 
                 boolean allowExitCommand = gui.getAllowExitCommand();
                 if (allowExitCommand){
-                    openedInv.setItem(20, Utils.itemCreate(Material.LIME_DYE, "&aEnable"));
+                    openedInv.setItem(20, Utils.itemCreate(Material.LIME_DYE, "&aEnable", null, false));
                 } else {
-                    openedInv.setItem(20, Utils.itemCreate(Material.GRAY_DYE, "&cDisable"));
+                    openedInv.setItem(20, Utils.itemCreate(Material.GRAY_DYE, "&cDisable", null, false));
                 }
 
                 boolean LockHeadMovement = gui.getLockHeadMovement();
                 if (LockHeadMovement){
-                    openedInv.setItem(21, Utils.itemCreate(Material.LIME_DYE, "&aEnable"));
+                    openedInv.setItem(21, Utils.itemCreate(Material.LIME_DYE, "&aEnable", null, false));
                 } else {
-                    openedInv.setItem(21, Utils.itemCreate(Material.GRAY_DYE, "&cDisable"));
+                    openedInv.setItem(21, Utils.itemCreate(Material.GRAY_DYE, "&cDisable", null, false));
                 }
 
                 boolean LockMovement = gui.getLockMovement();
                 if (LockMovement){
-                    openedInv.setItem(22, Utils.itemCreate(Material.LIME_DYE, "&aEnable"));
+                    openedInv.setItem(22, Utils.itemCreate(Material.LIME_DYE, "&aEnable", null, false));
                 } else {
-                    openedInv.setItem(22, Utils.itemCreate(Material.GRAY_DYE, "&cDisable"));
+                    openedInv.setItem(22, Utils.itemCreate(Material.GRAY_DYE, "&cDisable", null, false));
                 }
 
                 boolean disableSendChat = gui.getDisableSendChat();
                 if (disableSendChat){
-                    openedInv.setItem(23, Utils.itemCreate(Material.LIME_DYE, "&aEnable"));
+                    openedInv.setItem(23, Utils.itemCreate(Material.LIME_DYE, "&aEnable", null, false));
                 } else {
-                    openedInv.setItem(23, Utils.itemCreate(Material.GRAY_DYE, "&cDisable"));
+                    openedInv.setItem(23, Utils.itemCreate(Material.GRAY_DYE, "&cDisable", null, false));
                 }
 
                 boolean DamageProtection = gui.getDamageProtection();
                 if (DamageProtection){
-                    openedInv.setItem(24,Utils.itemCreate(Material.LIME_DYE, "&aEnable"));
+                    openedInv.setItem(24,Utils.itemCreate(Material.LIME_DYE, "&aEnable", null, false));
                 } else {
-                    openedInv.setItem(24, Utils.itemCreate(Material.GRAY_DYE, "&cDisable"));
+                    openedInv.setItem(24, Utils.itemCreate(Material.GRAY_DYE, "&cDisable", null, false));
                 }
 
             });
@@ -155,7 +158,7 @@ public class OpenInventoryHandler implements Listener {
             if (gui == null) return;
 
             int n = editorState.getCurrentEventSelected();
-            List<TutorialEvents> events = gui.getEvents();
+            List<TutorialEvent> events = gui.getEvents();
 
             if (events.isEmpty() || n < 0 || n >= events.size()) {
                 player.closeInventory();
@@ -189,7 +192,7 @@ public class OpenInventoryHandler implements Listener {
             ItemStack indexItem = openedInv.getItem(4);
             if (indexItem != null && indexItem.hasItemMeta()) {
                 ItemMeta indexMeta = indexItem.getItemMeta();
-                indexMeta.setDisplayName(Utils.colorize("&fIndex &e: &f" + n));
+                indexMeta.displayName(Utils.colorize("&fIndex &e: &f" + n));
                 indexItem.setItemMeta(indexMeta);
             }
 

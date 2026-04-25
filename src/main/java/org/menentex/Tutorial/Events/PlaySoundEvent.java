@@ -9,7 +9,7 @@ import org.menentex.Tutorial.Utils.Utils;
 
 import java.util.List;
 
-public class PlaySoundEvent extends TutorialEvents {
+public class PlaySoundEvent extends TutorialEvent {
 
     private final Sound sound;
     private final float volume;
@@ -82,6 +82,6 @@ public class PlaySoundEvent extends TutorialEvents {
                         "&#3F9AAEVolume &#3F9AAE: &#F6CE71" + getVolume(),
                         "&#3F9AAEPitch &#3F9AAE: &#F6CE71" + getPitch()
 
-                ));
+                ), false);
     }
 }

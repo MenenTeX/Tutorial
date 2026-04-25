@@ -6,13 +6,15 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.menentex.Tutorial.DataManager.Gui.EventListMananger;
+import org.menentex.Tutorial.Commands.Permissions;
 import org.menentex.Tutorial.DataManager.Gui.InMemoryGui;
 import org.menentex.Tutorial.DataManager.Gui.RegistryGui;
 import org.menentex.Tutorial.DataManager.Player.PlayerStateManager;
 import org.menentex.Tutorial.Main;
 import org.menentex.Tutorial.Tasks.GuiTask;
 import org.menentex.Tutorial.Tasks.GuiTaskManager;
+import org.menentex.Tutorial.Utils.UpdateChecker;
+import org.menentex.Tutorial.Utils.Utils;
 
 public class PlayerQuitServer implements Listener {
 
@@ -22,10 +24,16 @@ public class PlayerQuitServer implements Listener {
         Main.getInstance().getEventListMananger().removeAllEvent(event.getPlayer());
         Main.getInstance().getActionEditorState().removeSession(event.getPlayer());
         Main.getInstance().getPlayerStateManager().endTutorial(event.getPlayer().getUniqueId());
+
     }
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
+
+        if (Utils.hasPermission(event.getPlayer(), false, Permissions.ADMIN)){
+            new UpdateChecker(Main.getInstance(), 132904).notifyPlayer(event.getPlayer());
+        }
+
         FileConfiguration config = Main.getInstance().getConfig();
         String guiName = config.getString("tutorials.first-join-tutorial");
         if (guiName == null || guiName.equalsIgnoreCase("none")) return;
@@ -51,31 +59,6 @@ public class PlayerQuitServer implements Listener {
             GuiTask guiTask = new GuiTask(guiName, playerStateManager, registryGui);
             guiTask.runTaskTimer(Main.getInstance(), 0L, 1L);
             guiTaskManager.register(guiName, guiTask);
-            EventListMananger e = Main.getInstance().getEventListMananger();
-            if (gui.getLockMovement()) {
-                e.addMovementLock(target);
-            }
-            if (gui.getLockHeadMovement()) {
-                e.addHeadMovementLock(target);
-            }
-            if (gui.getDamageProtection()) {
-                e.addDamageProtection(target);
-            }
-            if (gui.getDisableSendChat()) {
-                e.addDisableSendChat(target);
-            }
-            if (gui.getNormalInvisible()) {
-                e.addNormalInvisibility(target);
-            }
-            if (gui.getProInvisible()) {
-                e.addProInvisibility(target);
-            }
-            if (gui.getDisablePlayerInteract()){
-                e.addDisablePlayerInteract(target, gui.getInteract());
-            }
-            if (gui.getDisableSendChat()){
-                e.addDisableSendChat(target);
-            }
         }
     }
 }

@@ -9,10 +9,14 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.menentex.Tutorial.Action.ActionEditorState;
 import org.menentex.Tutorial.Action.ActionManager;
 import org.menentex.Tutorial.Commands.Permissions;
-import org.menentex.Tutorial.DataManager.Gui.*;
+import org.menentex.Tutorial.DataManager.Gui.GuiInventoryHolder;
+import org.menentex.Tutorial.DataManager.Gui.GuiKeys;
+import org.menentex.Tutorial.DataManager.Gui.InMemoryGui;
+import org.menentex.Tutorial.DataManager.Gui.RegistryGui;
 import org.menentex.Tutorial.DataManager.Player.EditorState;
 import org.menentex.Tutorial.DataManager.Player.EditorStateManager;
 import org.menentex.Tutorial.DataManager.Player.PlayerStateManager;
@@ -26,10 +30,10 @@ import org.menentex.Tutorial.Utils.Utils;
 import java.util.List;
 import java.util.UUID;
 
-public class ClickInventoryHandler implements Listener{
+public class ClickInventoryHandler implements Listener {
 
     @EventHandler
-    public void onDragInventory(InventoryDragEvent event){
+    public void onDragInventory(InventoryDragEvent event) {
 
         Player player = (Player) event.getWhoClicked();
         if (!(Utils.hasPermission(player, false, Permissions.ADMIN, Permissions.EDIT))) return;
@@ -48,10 +52,9 @@ public class ClickInventoryHandler implements Listener{
     }
 
     @EventHandler
-    public void onClickInventory(InventoryClickEvent event){
+    public void onClickInventory(InventoryClickEvent event) {
 
-        if (event.getClickedInventory() == null)
-            return;
+        if (event.getClickedInventory() == null) return;
 
         Player player = (Player) event.getWhoClicked();
 
@@ -60,7 +63,7 @@ public class ClickInventoryHandler implements Listener{
             return;
         }
 
-        if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR){
+        if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR) {
             return;
         }
 
@@ -73,28 +76,23 @@ public class ClickInventoryHandler implements Listener{
         if (!(openedInv.getHolder() instanceof GuiInventoryHolder holder)) return;
 
         int slot = event.getRawSlot();
-        if (slot < openedInv.getSize()){
+        if (slot < openedInv.getSize()) {
             event.setCancelled(true);
         }
 
-        String inventoryId = holder.getInventoryKey();
-        String guiName = holder.getGuiName();
+        String inventoryId = holder.inventoryKey();
+        String guiName = holder.guiName();
 
         RegistryGui registryGui = Main.getInstance().getRegistryGui();
 
-        long lastPage = Math.max(
-                1,
-                registryGui.getGui(guiName)
-                        .map(InMemoryGui::countActionLists)
-                        .orElse(1L)
-        );
+        long lastPage = Math.max(1, registryGui.getGui(guiName).map(InMemoryGui::countActionLists).orElse(1L));
 
         EditorState editorState = editorStateManager.getState(player).orElse(null);
         if (editorState == null) return;
 
         int currentPage = editorState.getCurrentPage();
 
-        if (inventoryId.startsWith(GuiKeys.ACTION_LIST)){
+        if (inventoryId.startsWith(GuiKeys.ACTION_LIST)) {
             String formatPage = inventoryId.replace(GuiKeys.ACTION_LIST, "");
             editorState.setCurrentPage(Integer.parseInt(formatPage));
             currentPage = editorState.getCurrentPage();
@@ -103,26 +101,21 @@ public class ClickInventoryHandler implements Listener{
         InMemoryGui gui = registryGui.getGui(guiName).orElse(null);
         if (gui == null) return;
 
-        Main plugin = Main.getInstance();
         ActionEditorState actionEditorState = Main.getInstance().getActionEditorState();
 
-        if (inventoryId.startsWith(GuiKeys.ACTION_LIST)){
+        if (inventoryId.startsWith(GuiKeys.ACTION_LIST)) {
 
             editorStateManager.updateEnter(player, GuiKeys.ACTION_LIST + currentPage);
 
-            //Event Click
-
-            if (Utils.eventSlots().contains(slot)){
+            if (Utils.eventSlots().contains(slot)) {
 
                 int index = (currentPage - 1) * 36 + slot;
                 editorState.setCurrentEventSelected(index);
-                if (gui.getEvent(slot) != null)
-                    gui.open(player, GuiKeys.MOVE_EVENT);
+                if (gui.getEvent(slot) != null) gui.open(player, GuiKeys.MOVE_EVENT);
 
             }
 
-            //Main Action List
-            switch (slot){
+            switch (slot) {
 
                 case 45 -> gui.open(player, GuiKeys.ACTION_ADD_1);
 
@@ -135,9 +128,7 @@ public class ClickInventoryHandler implements Listener{
                 case 49 -> {
                     player.closeInventory();
                     gui.saveToConfigSectionAsync();
-                    String msg = Messages.Usage.SAVE_TUTORIAL;
-                    msg = msg.replace("%tutorial%", guiName);
-                    player.sendMessage(msg);
+                    player.sendMessage(Utils.applyPlaceholder(Messages.Usage.SAVE_TUTORIAL, "%tutorial%", guiName));
                 }
 
                 case 50 -> {
@@ -145,35 +136,30 @@ public class ClickInventoryHandler implements Listener{
                     if (!(Utils.hasPermission(player, true, Permissions.ADMIN, gui.getPermission()))) return;
                     PlayerStateManager playerStateManager = Main.getInstance().getPlayerStateManager();
                     GuiTaskManager guiTaskManager = Main.getInstance().getGuiTaskManager();
-                    if (guiTaskManager.isRunning(guiName)){
+                    if (gui.getEvents().isEmpty()) {
+                        Utils.sendMessageComponent(player, Messages.Usage.TUTORIAL_EMPTY);
+                        return;
+                    }
+                    if (guiTaskManager.isRunning(guiName)) {
                         playerStateManager.startTutorial(player, guiName);
                     } else {
                         playerStateManager.startTutorial(player, guiName);
                         GuiTask guiTask = new GuiTask(guiName, playerStateManager, registryGui);
                         guiTask.runTaskTimer(Main.getInstance(), 0L, 1L);
                         guiTaskManager.register(guiName, guiTask);
-                        EventListMananger e = Main.getInstance().getEventListMananger();
-
-                        if (gui.getLockMovement()) e.addMovementLock(player);
-                        if (gui.getLockHeadMovement()) e.addHeadMovementLock(player);
-                        if (gui.getDamageProtection()) e.addDamageProtection(player);
-                        if (gui.getDisableSendChat()) e.addDisableSendChat(player);
-                        if (gui.getNormalInvisible()) e.addNormalInvisibility(player);
-                        if (gui.getProInvisible()) e.addProInvisibility(player);
-                        if (gui.getDisablePlayerInteract()) e.addDisablePlayerInteract(player, gui.getInteract());
                     }
                 }
 
 
                 case 52 -> {
-                    if (currentPage < lastPage){
+                    if (currentPage < lastPage) {
                         currentPage++;
                         gui.open(player, GuiKeys.ACTION_LIST + currentPage);
                     }
                 }
 
                 case 53 -> {
-                    if (currentPage <= lastPage && currentPage != 1){
+                    if (currentPage <= lastPage && currentPage != 1) {
                         currentPage--;
                         gui.open(player, GuiKeys.ACTION_LIST + currentPage);
                     }
@@ -189,7 +175,7 @@ public class ClickInventoryHandler implements Listener{
 
                 editorStateManager.updateEnter(player, GuiKeys.ACTION_ADD_1);
 
-                switch (slot){
+                switch (slot) {
 
                     case 25 -> {
                         int index = gui.getEvents().size();
@@ -217,35 +203,35 @@ public class ClickInventoryHandler implements Listener{
 
                     case 21 -> {
                         player.closeInventory();
-                        Utils.sendMessage(player, Messages.Usage.Help.SETGAMEMODE_HELP);
+                        Utils.sendMessagePrefix(player, Messages.Usage.Help.SETGAMEMODE_HELP);
                         actionEditorState.startSession(player, ActionManager.ActionType.SET_GAMEMODE);
                         actionEditorState.startChatTimeout(player, guiName, getTimeOut("setgamemode", 15), editorState.getInventoryKey());
                     }
 
                     case 20 -> {
                         player.closeInventory();
-                        Utils.sendMessage(player, Messages.Usage.Help.ACTIONBAR_HELP);
+                        Utils.sendMessagePrefix(player, Messages.Usage.Help.ACTIONBAR_HELP);
                         actionEditorState.startSession(player, ActionManager.ActionType.ACTION_BAR);
                         actionEditorState.startChatTimeout(player, guiName, getTimeOut("actionbar", 15), editorState.getInventoryKey());
                     }
 
                     case 19 -> {
                         player.closeInventory();
-                        Utils.sendMessage(player, Messages.Usage.Help.CONSOLECMD_HELP);
+                        Utils.sendMessagePrefix(player, Messages.Usage.Help.CONSOLECMD_HELP);
                         actionEditorState.startSession(player, ActionManager.ActionType.CONSOLE_COMMAND);
                         actionEditorState.startChatTimeout(player, guiName, getTimeOut("consolecommand", 20), editorState.getInventoryKey());
                     }
 
                     case 16 -> {
                         player.closeInventory();
-                        Utils.sendMessage(player, Messages.Usage.Help.PLAYERCMD_HELP);
+                        Utils.sendMessagePrefix(player, Messages.Usage.Help.PLAYERCMD_HELP);
                         actionEditorState.startSession(player, ActionManager.ActionType.PLAYER_COMMAND);
                         actionEditorState.startChatTimeout(player, guiName, getTimeOut("playercommand", 20), editorState.getInventoryKey());
                     }
 
                     case 15 -> {
                         player.closeInventory();
-                        Utils.sendMessage(player, Messages.Usage.Help.PLAYERSOUND_HELP);
+                        Utils.sendMessagePrefix(player, Messages.Usage.Help.PLAYERSOUND_HELP);
                         actionEditorState.startSession(player, ActionManager.ActionType.PLAY_SOUND);
                         actionEditorState.startChatTimeout(player, guiName, getTimeOut("playsound", 40), editorState.getInventoryKey());
                     }
@@ -258,21 +244,21 @@ public class ClickInventoryHandler implements Listener{
 
                     case 13 -> {
                         player.closeInventory();
-                        Utils.sendMessage(player, Messages.Usage.Help.DELAY_HELP);
+                        Utils.sendMessagePrefix(player, Messages.Usage.Help.DELAY_HELP);
                         actionEditorState.startSession(player, ActionManager.ActionType.DELAY);
                         actionEditorState.startChatTimeout(player, guiName, getTimeOut("delay", 15), editorState.getInventoryKey());
                     }
 
                     case 12 -> {
                         player.closeInventory();
-                        Utils.sendMessage(player, Messages.Usage.Help.TITLE_HELP);
+                        Utils.sendMessagePrefix(player, Messages.Usage.Help.TITLE_HELP);
                         actionEditorState.startSession(player, ActionManager.ActionType.TITLE);
                         actionEditorState.startChatTimeout(player, guiName, getTimeOut("title", 60), editorState.getInventoryKey());
                     }
 
                     case 11 -> {
                         player.closeInventory();
-                        Utils.sendMessage(player, Messages.Usage.Help.MESSAGE_HELP);
+                        Utils.sendMessagePrefix(player, Messages.Usage.Help.MESSAGE_HELP);
                         actionEditorState.startSession(player, ActionManager.ActionType.MESSAGE);
                         actionEditorState.startChatTimeout(player, guiName, getTimeOut("message", 60), editorState.getInventoryKey());
                     }
@@ -310,7 +296,7 @@ public class ClickInventoryHandler implements Listener{
 
                     case 13 -> {
                         player.closeInventory();
-                        Utils.sendMessage(player, Messages.Usage.Help.GIVEITEM_HELP);
+                        Utils.sendMessagePrefix(player, Messages.Usage.Help.GIVEITEM_HELP);
                         actionEditorState.startSession(player, ActionManager.ActionType.GIVE_ITEM);
                         actionEditorState.startChatTimeout(player, guiName, getTimeOut("giveitem", 30), editorState.getInventoryKey());
                     }
@@ -323,7 +309,7 @@ public class ClickInventoryHandler implements Listener{
 
                     case 15 -> {
                         player.closeInventory();
-                        Utils.sendMessage(player, Messages.Usage.Help.POTION_HELP);
+                        Utils.sendMessagePrefix(player, Messages.Usage.Help.POTION_HELP);
                         actionEditorState.startSession(player, ActionManager.ActionType.POTION);
                         actionEditorState.startChatTimeout(player, guiName, getTimeOut("potion", 30), editorState.getInventoryKey());
                     }
@@ -332,6 +318,42 @@ public class ClickInventoryHandler implements Listener{
                         int index = gui.getEvents().size();
                         gui.addEvent(new UnGodEvent(index));
                         gui.open(player, GuiKeys.ACTION_LIST + currentPage);
+                    }
+
+                    case 19 -> {
+                        player.closeInventory();
+                        actionEditorState.startSession(player, ActionManager.ActionType.WAIT_REGION_ENTER);
+                        giveWand(player);
+                    }
+
+                    case 20 -> {
+                        player.closeInventory();
+                        actionEditorState.startSession(player, ActionManager.ActionType.CINEMATIC);
+                        giveWand(player);
+                    }
+
+                    case 21 -> {
+                        player.closeInventory();
+                        Utils.sendMessagePrefix(player, Messages.Usage.Help.MESSAGE_HELP);
+                        actionEditorState.startSession(player, ActionManager.ActionType.BOSS_BAR);
+                    }
+
+                    case 22 -> {
+                        player.closeInventory();
+                        Utils.sendMessageComponent(player, Messages.Usage.Help.YAW_PITCH_HELP);
+                        actionEditorState.startSession(player, ActionManager.ActionType.SETROTATION);
+                    }
+
+                    case 23 -> {
+                        player.closeInventory();
+                        Utils.sendMessagePrefix(player, Messages.Usage.Help.DIRECTION_HELP);
+                        actionEditorState.startSession(player, ActionManager.ActionType.VECTOR);
+                    }
+
+                    case 24 -> {
+                        player.closeInventory();
+                        Utils.sendMessagePrefix(player, Messages.Usage.Help.TELEPORT_WORLD_HELP);
+                        actionEditorState.startSession(player, ActionManager.ActionType.STRIKE_LIGHTNING);
                     }
 
                     case 40 -> gui.open(player, GuiKeys.ACTION_ADD_1);
@@ -344,9 +366,9 @@ public class ClickInventoryHandler implements Listener{
 
                 switch (slot) {
 
-                    case 0,1,2,9,10,11,18,19,20 -> {
+                    case 0, 1, 2, 9, 10, 11, 18, 19, 20 -> {
 
-                        for (UUID uuid : editorStateManager.getPlayersInGui(guiName)){
+                        for (UUID uuid : editorStateManager.getPlayersInGui(guiName)) {
                             Player p = Bukkit.getPlayer(uuid);
                             if (p != null) {
                                 p.closeInventory();
@@ -355,12 +377,10 @@ public class ClickInventoryHandler implements Listener{
                         }
                         gui.deleteGuiFromYML(true);
                         registryGui.removeGui(guiName);
-                        String msg = Messages.Usage.DELETE_TUTORIAL;
-                        msg = msg.replace("%tutorial%", guiName);
-                        player.sendMessage(msg);
+                        player.sendMessage(Utils.applyPlaceholder(Messages.Usage.DELETE_TUTORIAL, "%tutorial%", guiName));
                     }
 
-                    case 6,7,8,15,16,17,24,25,26 -> gui.open(player, GuiKeys.ACTION_LIST + currentPage);
+                    case 6, 7, 8, 15, 16, 17, 24, 25, 26 -> gui.open(player, GuiKeys.ACTION_LIST + currentPage);
 
                 }
 
@@ -374,10 +394,7 @@ public class ClickInventoryHandler implements Listener{
 
                         boolean allowExitCommand = !gui.getAllowExitCommand();
                         gui.setAllowExitCommand(allowExitCommand);
-                        openedInv.setItem(20, Utils.itemCreate(
-                                allowExitCommand ? Material.LIME_DYE : Material.GRAY_DYE,
-                                allowExitCommand ? "&aEnable" : "&cDisable"
-                        ));
+                        openedInv.setItem(20, Utils.itemCreate(allowExitCommand ? Material.LIME_DYE : Material.GRAY_DYE, allowExitCommand ? "&aEnable" : "&cDisable", null, false));
 
                     }
 
@@ -385,10 +402,7 @@ public class ClickInventoryHandler implements Listener{
 
                         boolean lockHeadMovement = !gui.getLockHeadMovement();
                         gui.setLockHeadMovement(lockHeadMovement);
-                        openedInv.setItem(21, Utils.itemCreate(
-                                lockHeadMovement ? Material.LIME_DYE : Material.GRAY_DYE,
-                                lockHeadMovement ? "&aEnable" : "&cDisable"
-                        ));
+                        openedInv.setItem(21, Utils.itemCreate(lockHeadMovement ? Material.LIME_DYE : Material.GRAY_DYE, lockHeadMovement ? "&aEnable" : "&cDisable", null, false));
 
                     }
 
@@ -396,11 +410,8 @@ public class ClickInventoryHandler implements Listener{
 
                         boolean lockMovement = !gui.getLockMovement();
                         gui.setLockMovement(lockMovement);
-                        openedInv.setItem(22, Utils.itemCreate(
-                                lockMovement ? Material.LIME_DYE : Material.GRAY_DYE,
-                                lockMovement ? "&aEnable" : "&cDisable"
-                        ));
-                        if (!lockMovement){
+                        openedInv.setItem(22, Utils.itemCreate(lockMovement ? Material.LIME_DYE : Material.GRAY_DYE, lockMovement ? "&aEnable" : "&cDisable", null, false));
+                        if (!lockMovement) {
                             if (player.getGameMode() != GameMode.CREATIVE) {
                                 player.setAllowFlight(false);
                                 player.setFlying(false);
@@ -413,10 +424,7 @@ public class ClickInventoryHandler implements Listener{
 
                         boolean disableSendChat = !gui.getDisableSendChat();
                         gui.setDisableSendChat(disableSendChat);
-                        openedInv.setItem(23, Utils.itemCreate(
-                                disableSendChat ? Material.LIME_DYE : Material.GRAY_DYE,
-                                disableSendChat ? "&aEnable" : "&cDisable"
-                        ));
+                        openedInv.setItem(23, Utils.itemCreate(disableSendChat ? Material.LIME_DYE : Material.GRAY_DYE, disableSendChat ? "&aEnable" : "&cDisable", null, false));
 
                     }
 
@@ -424,12 +432,7 @@ public class ClickInventoryHandler implements Listener{
 
                         boolean damageProtection = !gui.getDamageProtection();
                         gui.setDamageProtection(damageProtection);
-                        openedInv.setItem(24, Utils.itemCreate(
-                                damageProtection ? Material.LIME_DYE : Material.GRAY_DYE,
-                                damageProtection ? "&aEnable" : "&cDisable"
-                        ));
-
-
+                        openedInv.setItem(24, Utils.itemCreate(damageProtection ? Material.LIME_DYE : Material.GRAY_DYE, damageProtection ? "&aEnable" : "&cDisable", null, false));
                     }
 
                     case 27 -> gui.open(player, GuiKeys.ACTION_LIST + currentPage);
@@ -445,14 +448,11 @@ public class ClickInventoryHandler implements Listener{
                     case 12 -> {
                         boolean normalInvisible = !gui.getNormalInvisible();
                         gui.setNormalInvisible(normalInvisible);
-                        openedInv.setItem(21, Utils.itemCreate(
-                                normalInvisible ? Material.LIME_DYE : Material.GRAY_DYE,
-                                normalInvisible ? "&aEnable" : "&cDisable"
-                        ));
+                        openedInv.setItem(21, Utils.itemCreate(normalInvisible ? Material.LIME_DYE : Material.GRAY_DYE, normalInvisible ? "&aEnable" : "&cDisable", null, false));
                     }
 
                     case 13 -> {
-                        Utils.sendMessage(player, Messages.Usage.Help.EVENT_PLAYERINTERACT_HELP);
+                        Utils.sendMessagePrefix(player, Messages.Usage.Help.EVENT_PLAYERINTERACT_HELP);
                         player.closeInventory();
                         actionEditorState.startSession(player, ActionManager.ActionType.EVENT_PLAYERINTERACT);
                         actionEditorState.startChatTimeout(player, guiName, 20, GuiKeys.ACTION_LIST + currentPage);
@@ -462,10 +462,7 @@ public class ClickInventoryHandler implements Listener{
                         if (Bukkit.getPluginManager().isPluginEnabled("ProtocolLib")) {
                             boolean proInvisible = !gui.getProInvisible();
                             gui.setProInvisible(proInvisible);
-                            openedInv.setItem(23, Utils.itemCreate(
-                                    proInvisible ? Material.LIME_DYE : Material.GRAY_DYE,
-                                    proInvisible ? "&aEnable" : "&cDisable"
-                            ));
+                            openedInv.setItem(23, Utils.itemCreate(proInvisible ? Material.LIME_DYE : Material.GRAY_DYE, proInvisible ? "&aEnable" : "&cDisable", null, false));
                         } else {
                             player.sendMessage("&cProtoclLib not Founded");
                         }
@@ -489,17 +486,16 @@ public class ClickInventoryHandler implements Listener{
 
                     case 4 -> {
 
-                        if (stateFormat.startsWith(GuiKeys.ACTION_LIST)){
+                        if (stateFormat.startsWith(GuiKeys.ACTION_LIST)) {
                             gui.open(player, GuiKeys.ACTION_LIST + currentPage);
-                        } else if (stateFormat.equals(GuiKeys.ACTION_ADD_1))
-                            gui.open(player, GuiKeys.ACTION_ADD_1);
+                        } else if (stateFormat.equals(GuiKeys.ACTION_ADD_1)) gui.open(player, GuiKeys.ACTION_ADD_1);
                     }
 
                     case 1 -> {
-                        if (stateFormat.startsWith(GuiKeys.ACTION_LIST)){
+                        if (stateFormat.startsWith(GuiKeys.ACTION_LIST)) {
                             gui.setExitLocation(player.getLocation());
                             gui.open(player, GuiKeys.ACTION_LIST + currentPage);
-                        } else if (stateFormat.equals(GuiKeys.ACTION_ADD_1)){
+                        } else if (stateFormat.equals(GuiKeys.ACTION_ADD_1)) {
                             int index = gui.getEvents().size();
                             gui.addEvent(new TeleportEvent(index, player.getLocation()));
                             gui.open(player, GuiKeys.ACTION_ADD_1);
@@ -507,14 +503,14 @@ public class ClickInventoryHandler implements Listener{
                     }
 
                     case 7 -> {
-                        if (stateFormat.startsWith(GuiKeys.ACTION_LIST)){
+                        if (stateFormat.startsWith(GuiKeys.ACTION_LIST)) {
                             player.closeInventory();
-                            Utils.sendMessage(player, Messages.Usage.Help.TELEPORT_WORLD_HELP);
+                            Utils.sendMessagePrefix(player, Messages.Usage.Help.TELEPORT_WORLD_HELP);
                             actionEditorState.startSession(player, ActionManager.ActionType.TELEPORT_EXIT);
                             actionEditorState.startChatTimeout(player, guiName, 12, editorState.getInventoryKey());
-                        } else if (stateFormat.equals(GuiKeys.ACTION_ADD_1)){
+                        } else if (stateFormat.equals(GuiKeys.ACTION_ADD_1)) {
                             player.closeInventory();
-                            Utils.sendMessage(player, Messages.Usage.Help.TELEPORT_WORLD_HELP);
+                            Utils.sendMessagePrefix(player, Messages.Usage.Help.TELEPORT_WORLD_HELP);
                             actionEditorState.startSession(player, ActionManager.ActionType.TELEPORT);
                             actionEditorState.startChatTimeout(player, guiName, 12, editorState.getInventoryKey());
                         }
@@ -541,7 +537,7 @@ public class ClickInventoryHandler implements Listener{
                     case 24 -> {
 
                         player.closeInventory();
-                        TutorialEvents e = gui.getEvent(n);
+                        TutorialEvent e = gui.getEvent(n);
                         e.execute(player);
 
                     }
@@ -581,8 +577,20 @@ public class ClickInventoryHandler implements Listener{
         }
     }
 
-    public int getTimeOut(String path, int def){
+    public int getTimeOut(String path, int def) {
         return Main.getInstance().getConfig().getInt("timeout-enter-event." + path, def);
+    }
+
+    public void giveWand(Player player){
+        if (Utils.findAllSlotsByPDC(player, "tutorial_axe").isEmpty())
+            player.getInventory().addItem(Utils.createWand());
+        else {
+            for (int s : Utils.findAllSlotsByPDC(player, "tutorial_axe")) {
+                player.getInventory().setItem(s, new ItemStack(Material.AIR));
+            }
+            player.getInventory().addItem(Utils.createWand());
+        }
+        Utils.sendMessage(player, List.of("&7Please select 2 points for the desired region.", "&6Click-Right &e& &6Click-Left", "&7And when you finally write &8( &cEnd &7& &cSubmit &8)"));
     }
 
 }

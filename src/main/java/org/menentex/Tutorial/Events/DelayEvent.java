@@ -8,7 +8,7 @@ import org.menentex.Tutorial.Utils.Utils;
 
 import java.util.List;
 
-public class DelayEvent extends TutorialEvents{
+public class DelayEvent extends TutorialEvent {
 
     private final long duration;
 
@@ -56,7 +56,7 @@ public class DelayEvent extends TutorialEvents{
                         "",
                         "&#3F9AAEIndex &#3F9AAE: &#F6CE71" + getIndex(),
                         "&#3F9AAEDuration &#3F9AAE: &#F6CE71" + Utils.formatTick(getDuration())
-                ));
+                ), false);
     }
 
 }

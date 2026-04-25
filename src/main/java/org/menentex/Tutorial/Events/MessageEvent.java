@@ -10,7 +10,7 @@ import org.menentex.Tutorial.Utils.Utils;
 
 import java.util.List;
 
-public class MessageEvent extends TutorialEvents{
+public class MessageEvent extends TutorialEvent {
 
     private final String message;
 
@@ -64,7 +64,7 @@ public class MessageEvent extends TutorialEvents{
                         "",
                         "&#3F9AAEIndex &#3F9AAE: &#F6CE71" + getIndex(),
                         "&#3F9AAEMessage &#3F9AAE: &#F6CE71" + getMessage()
-                ));
+                ), false);
     }
 
 }

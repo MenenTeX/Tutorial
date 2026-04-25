@@ -11,13 +11,14 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.menentex.Tutorial.Commands.EditorCommands;
 import org.menentex.Tutorial.Commands.PlayerCommands;
 import org.menentex.Tutorial.Commands.TabComplete;
-import org.menentex.Tutorial.DataManager.Gui.EventListMananger;
+import org.menentex.Tutorial.DataManager.EventListMananger;
 import org.menentex.Tutorial.DataManager.Gui.GuiLoader;
 import org.menentex.Tutorial.DataManager.Gui.InMemoryGui;
 import org.menentex.Tutorial.DataManager.Gui.RegistryGui;
 import org.menentex.Tutorial.Action.ActionEditorState;
 import org.menentex.Tutorial.DataManager.Player.EditorStateManager;
 import org.menentex.Tutorial.DataManager.Player.PlayerStateManager;
+import org.menentex.Tutorial.DataManager.WaitingEventData.WaitActionList;
 import org.menentex.Tutorial.Dependencie.ProtocollibDepend;
 import org.menentex.Tutorial.Listener.*;
 import org.menentex.Tutorial.Tasks.GuiTaskManager;
@@ -44,6 +45,7 @@ public class Main extends JavaPlugin {
     private GuiTaskManager guiTaskManager;
     private PlayerStateManager playerStateManager;
     private EventListMananger eventListMananger;
+    private WaitActionList waitActionList;
 
     private static ProtocollibDepend protocollibDepend;
 
@@ -67,7 +69,7 @@ public class Main extends JavaPlugin {
 
         initBstats();
         messageConfig = loadYaml("message.yml");
-        new Messages();
+        new org.menentex.Tutorial.Messages();
         new UpdateChecker(this, 132904).check();
         registryGui = new RegistryGui();
         editorStateManager = new EditorStateManager();
@@ -75,6 +77,7 @@ public class Main extends JavaPlugin {
         guiTaskManager = new GuiTaskManager();
         playerStateManager = new PlayerStateManager();
         eventListMananger = new EventListMananger();
+        waitActionList = new WaitActionList();
         saveDefaultConfig();
         reloadConfig();
         loadTutorials();
@@ -130,6 +133,7 @@ public class Main extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new ActionMessage(), this);
         Bukkit.getPluginManager().registerEvents(new SettingEvents(), this);
         Bukkit.getPluginManager().registerEvents(new PlayerQuitServer(), this);
+        Bukkit.getPluginManager().registerEvents(new OnWaitActions(), this);
 
     }
 
@@ -201,4 +205,6 @@ public class Main extends JavaPlugin {
     public ProtocollibDepend getProtocolib() {
         return protocollibDepend;
     }
+
+    public WaitActionList getWaitActionList() { return waitActionList; }
 }

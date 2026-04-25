@@ -1,25 +1,27 @@
 package org.menentex.Tutorial.Events;
 
 import me.clip.placeholderapi.PlaceholderAPI;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 import org.menentex.Tutorial.Main;
 import org.menentex.Tutorial.Utils.Utils;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
-public class ActionBarEvent extends TutorialEvents{
+public class ActionBarEvent extends TutorialEvent {
 
     private final String message;
     private final long duration;
+
+    private static final Map<UUID, BukkitTask> TASKS = new HashMap<>();
 
     public ActionBarEvent(int index, String message, long duration){
         super(index);
@@ -37,28 +39,61 @@ public class ActionBarEvent extends TutorialEvents{
 
     @Override
     public void execute(Player player){
+
         String perm = getPermission();
-        if (perm != null && !perm.isEmpty() && !Utils.hasPermission(player, false, perm)) return;
+        if (perm != null && !perm.isEmpty() && !Utils.hasPermission(player, false, perm))
+            return;
+
         String finalMessage = message;
+
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI"))
             finalMessage = PlaceholderAPI.setPlaceholders(player, finalMessage);
 
-        finalMessage = Utils.applyPlaceholders(message, Utils.placeholders(player, player.getWorld(), Bukkit.getServer().getName()));
+        finalMessage = Utils.applyPlaceholders(
+                finalMessage,
+                Utils.placeholders(player, player.getWorld(), Bukkit.getServer().getName())
+        );
 
-        String finalMessage1 = finalMessage;
-        new BukkitRunnable(){
-            int count = 0;
+        UUID uuid = player.getUniqueId();
+
+        BukkitTask old = TASKS.remove(uuid);
+        if (old != null)
+            old.cancel();
+
+        String ff = finalMessage;
+        BukkitTask task = new BukkitRunnable(){
+
+            long count = 0;
+
             @Override
             public void run(){
-                if (count >= duration){
+
+                if (!player.isOnline()){
+                    TASKS.remove(uuid);
                     cancel();
                     return;
                 }
 
-                player.sendActionBar(Utils.colorizeComponent(finalMessage1));
+                if (count >= duration){
+                    TASKS.remove(uuid);
+                    cancel();
+                    return;
+                }
+
+                player.sendActionBar(Utils.colorize(ff));
                 count++;
             }
-        }.runTaskTimer(Main.getInstance(), 0, 1L);
+
+        }.runTaskTimer(Main.getInstance(),0L,1L);
+
+        TASKS.put(uuid, task);
+    }
+
+    public static void stop(Player player){
+        BukkitTask task = TASKS.remove(player.getUniqueId());
+        if (task != null){
+            task.cancel();
+        }
     }
 
     @Override
@@ -91,7 +126,7 @@ public class ActionBarEvent extends TutorialEvents{
                         "&#3F9AAEIndex &#3F9AAE: &#F6CE71" + getIndex(),
                         "&#3F9AAEDuration &#3F9AAE: &#F6CE71" + Utils.formatTick(getDuration()),
                         "&#3F9AAEActionBar &#3F9AAE: &#F6CE71" + getMessage()
-                ));
+                ), false);
     }
 
 }

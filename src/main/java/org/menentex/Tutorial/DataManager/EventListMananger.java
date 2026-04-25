@@ -1,4 +1,4 @@
-package org.menentex.Tutorial.DataManager.Gui;
+package org.menentex.Tutorial.DataManager;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -22,8 +22,17 @@ public class EventListMananger {
     private final Set<UUID> disableSendChat = new HashSet<>();
     private final Set<UUID> damageProtection = new HashSet<>();
     private final Map<UUID, Player_Interact> disablePlayerInteract = new HashMap<>();
+    private final Map<UUID, Float> oldWalkSpeeds = new HashMap<>();
+    private final Map<UUID, Float> oldFlySpeeds = new HashMap<>();
 
     public void addMovementLock(Player player){
+        UUID uuid = player.getUniqueId();
+        if (!oldWalkSpeeds.containsKey(uuid)) {
+            oldWalkSpeeds.put(uuid, player.getWalkSpeed());
+            oldFlySpeeds.put(uuid, player.getFlySpeed());
+        }
+        player.setWalkSpeed(0f);
+        player.setFlySpeed(0f);
         movementLock.add(player.getUniqueId());
     }
     public void addHeadMovementLock(Player player){
@@ -48,6 +57,14 @@ public class EventListMananger {
 
 
     public void removeMovementLock(Player player){
+        UUID uuid = player.getUniqueId();
+
+        Float oldWalk = oldWalkSpeeds.remove(uuid);
+        Float oldFly = oldFlySpeeds.remove(uuid);
+
+        player.setWalkSpeed(oldWalk != null ? oldWalk : 0.2f);
+        player.setFlySpeed(oldFly != null ? oldFly : 0.1f);
+
         movementLock.remove(player.getUniqueId());
     }
     public void removeHeadMovementLock(Player player){
@@ -107,11 +124,11 @@ public class EventListMananger {
     }
 
     public void removeAllEvent(Player player){
-        movementLock.remove(player.getUniqueId());
-        headMovementLock.remove(player.getUniqueId());
-        normalInvisibility.remove(player.getUniqueId());
-        proInvisibility.remove(player.getUniqueId());
-        disableSendChat.remove(player.getUniqueId());
-        damageProtection.remove(player.getUniqueId());
+        removeMovementLock(player);
+        removeHeadMovementLock(player);
+        removeNormalInvisibility(player);
+        removeDisableSendChat(player);
+        removeDamageProtection(player);
+        removeDisablePlayerInteract(player);
     }
 }

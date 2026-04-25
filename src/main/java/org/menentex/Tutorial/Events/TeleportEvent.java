@@ -9,7 +9,7 @@ import org.menentex.Tutorial.Utils.Utils;
 
 import java.util.List;
 
-public class TeleportEvent extends TutorialEvents {
+public class TeleportEvent extends TutorialEvent {
 
     private final Location location;
 
@@ -83,7 +83,7 @@ public class TeleportEvent extends TutorialEvents {
                         "&#3F9AAEZ: &#3F9AAE: &#F6CE71" + z,
                         "&#3F9AAEYaw: &#3F9AAE: &#F6CE71" + Float.toString(yaw).substring(0, Math.min(Float.toString(yaw).length(), 6)),
                         "&#3F9AAEPitch: &#3F9AAE: &#F6CE71" + Float.toString(pitch).substring(0, Math.min(Float.toString(pitch).length(), 5))
-                ));
+                ), false);
     }
 
 

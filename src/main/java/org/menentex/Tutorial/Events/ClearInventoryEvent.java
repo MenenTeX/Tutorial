@@ -8,7 +8,7 @@ import org.menentex.Tutorial.Utils.Utils;
 
 import java.util.List;
 
-public class ClearInventoryEvent extends TutorialEvents{
+public class ClearInventoryEvent extends TutorialEvent {
 
     public ClearInventoryEvent(int index){
         super(index);
@@ -38,7 +38,7 @@ public class ClearInventoryEvent extends TutorialEvents{
                 List.of(
                         "",
                         "&#3F9AAEIndex &#3F9AAE: &#F6CE71" + getIndex()
-                ));
+                ), false);
     }
 
 }

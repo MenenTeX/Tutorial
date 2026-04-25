@@ -12,7 +12,7 @@ import org.menentex.Tutorial.Utils.Utils;
 
 import java.util.List;
 
-public class PotionEvent extends TutorialEvents{
+public class PotionEvent extends TutorialEvent {
 
     private final PotionEffectType potion;
     private final int level;

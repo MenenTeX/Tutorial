@@ -1,20 +1,17 @@
 package org.menentex.Tutorial.Tasks;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.menentex.Tutorial.DataManager.Gui.EventListMananger;
+import org.menentex.Tutorial.DataManager.EventListMananger;
 import org.menentex.Tutorial.DataManager.Gui.InMemoryGui;
 import org.menentex.Tutorial.DataManager.Gui.RegistryGui;
 import org.menentex.Tutorial.DataManager.Player.PlayerState;
 import org.menentex.Tutorial.DataManager.Player.PlayerStateManager;
-import org.menentex.Tutorial.Events.TutorialEvents;
 import org.menentex.Tutorial.Events.ActionBarEvent;
+import org.menentex.Tutorial.Events.ConditionalEvent;
+import org.menentex.Tutorial.Events.TutorialEvent;
 import org.menentex.Tutorial.Main;
 import org.menentex.Tutorial.Utils.Utils;
 
@@ -28,7 +25,8 @@ public class GuiTask extends BukkitRunnable {
 
     private long tickCounter = 0;
     private BukkitRunnable exitBarTask;
-    private final Set<UUID> actionBarHidden = new HashSet<>();
+
+    private final Map<UUID, Long> actionBarHidden = new HashMap<>();
 
     public GuiTask(String guiName, PlayerStateManager playerStateManager, RegistryGui registryGui){
         this.guiName = guiName;
@@ -77,14 +75,18 @@ public class GuiTask extends BukkitRunnable {
 
             if (player == null || !player.isOnline()) {
                 toRemove.add(uuid);
+                actionBarHidden.remove(uuid);
                 continue;
             }
+
+            if (state.isConditionBlocked())
+                continue;
 
             if (state.isWaiting(tickCounter))
                 continue;
 
             int index = state.getCurrentEventIndex();
-            TutorialEvents event = gui.getEvent(index);
+            TutorialEvent event = gui.getEvent(index);
 
             if (event == null || index >= gui.getEvents().size()) {
                 endTutorial(player, gui);
@@ -93,16 +95,20 @@ public class GuiTask extends BukkitRunnable {
             }
 
             if (event instanceof ActionBarEvent) {
-                actionBarHidden.add(uuid);
+                actionBarHidden.put(uuid, tickCounter + ((ActionBarEvent) event).getDuration());
             }
 
             event.execute(player);
 
-            if (!(event instanceof ActionBarEvent)) {
-                actionBarHidden.remove(uuid);
+            if (event instanceof ConditionalEvent) {
+                state.blockByCondition(event);
+                state.nextEvent();
+                processed++;
+                continue;
             }
 
             long block = event.getBlockingTicks();
+
             if (block > 0) {
                 state.setWaitUntil(tickCounter + block);
             }
@@ -143,19 +149,26 @@ public class GuiTask extends BukkitRunnable {
                     if (player == null || !player.isOnline())
                         continue;
 
-                    if (actionBarHidden.contains(player.getUniqueId()))
-                        continue;
+                    UUID uuid = player.getUniqueId();
+
+                    Long hiddenUntil = actionBarHidden.get(uuid);
+
+                    if (hiddenUntil != null) {
+                        if (tickCounter < hiddenUntil)
+                            continue;
+
+                        actionBarHidden.remove(uuid);
+                    }
 
                     String message = gui.getActionBarExitMessage();
 
                     if (message == null)
                         continue;
 
-                    player.sendActionBar(Utils.colorizeComponent(message));
+                    player.sendActionBar(Utils.colorize(message));
                 }
             }
         };
-
         exitBarTask.runTaskTimer(Main.getInstance(), 0L, 20L);
     }
 
@@ -166,7 +179,9 @@ public class GuiTask extends BukkitRunnable {
         }
     }
 
-    private void endTutorial(Player player, InMemoryGui gui) {
+    public void endTutorial(Player player, InMemoryGui gui) {
+
+        UUID uuid = player.getUniqueId();
 
         EventListMananger e =
                 Main.getInstance().getEventListMananger();
@@ -176,18 +191,19 @@ public class GuiTask extends BukkitRunnable {
         if (e.isProInvisibility(player))
             e.removeProInvisibility(player);
 
-        if (e.isNormalInvisibility(player))
-            e.removeNormalInvisibility(player);
-
         if (player.getGameMode() != GameMode.CREATIVE) {
-            player.setAllowFlight(false);
+            if (e.isMovementLock(player))
+                player.setAllowFlight(false);
             player.setFlying(false);
         }
 
         if (gui.getExitLocation() != null)
             player.teleport(gui.getExitLocation());
 
-        playerStateManager.endTutorial(player.getUniqueId());
+        actionBarHidden.remove(uuid);
+        ActionBarEvent.stop(player);
+
+        playerStateManager.endTutorial(uuid);
     }
 
     public long getTickCounter() {

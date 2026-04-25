@@ -2,111 +2,63 @@ package org.menentex.Tutorial.Utils;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import net.md_5.bungee.api.ChatColor;
-import org.bukkit.*;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
+import org.bukkit.GameMode;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffectType;
-import org.menentex.Tutorial.DataManager.Gui.EventListMananger;
+import org.bukkit.util.Vector;
+import org.intellij.lang.annotations.RegExp;
+import org.menentex.Tutorial.DataManager.EventListMananger;
 import org.menentex.Tutorial.Events.*;
 import org.menentex.Tutorial.Main;
 import org.menentex.Tutorial.Messages;
 
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class Utils {
 
-    public static ItemStack itemCreate(Material material, String display, ItemFlag ... itemFlags){
+    public static ItemStack itemCreate(
+            Material material,
+            String display,
+            List<String> lore,
+            Boolean glow,
+            ItemFlag... flags
+    ) {
         ItemStack item = new ItemStack(material);
-        ItemMeta itemMeta = item.getItemMeta();
-        if (itemMeta == null) return item;
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) return item;
 
-        itemMeta.setDisplayName(colorize(Objects.requireNonNullElse(display, "&f")));
+        meta.displayName(colorize(Objects.requireNonNullElse(display, "&f")));
 
-        for (ItemFlag i : itemFlags){
-            itemMeta.addItemFlags(i);
+        if (lore != null && !lore.isEmpty()) {
+            meta.lore(colorize(lore));
         }
-        item.setItemMeta(itemMeta);
+
+        if (glow != null && glow) {
+            meta.addEnchant(Enchantment.LUCK, 1, false);
+            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        }
+
+        if (flags != null) {
+            for (ItemFlag flag : flags) {
+                meta.addItemFlags(flag);
+            }
+        }
+
+        item.setItemMeta(meta);
         return item;
     }
 
-    public static ItemStack itemCreate(Material material, String display){
-        ItemStack item = new ItemStack(material);
-        ItemMeta itemMeta = item.getItemMeta();
-        if (itemMeta == null) return item;
-
-        itemMeta.setDisplayName(colorize(Objects.requireNonNullElse(display, "&f")));
-
-        item.setItemMeta(itemMeta);
-        return item;
-    }
-
-    public static ItemStack itemCreate(Material material, String display, List<String> lore){
-        ItemStack item = new ItemStack(material);
-        ItemMeta itemMeta = item.getItemMeta();
-        if (itemMeta == null) return item;
-
-        itemMeta.setDisplayName(colorize(Objects.requireNonNullElse(display, "&f")));
-
-        if (lore != null && !lore.isEmpty()){
-            itemMeta.setLore(colorize(lore));
-        }
-
-        item.setItemMeta(itemMeta);
-        return item;
-    }
-
-    public static ItemStack itemCreate(Material material, String display, List<String> lore, boolean glow){
-        ItemStack item = new ItemStack(material);
-        ItemMeta itemMeta = item.getItemMeta();
-        if (itemMeta == null) return item;
-
-        itemMeta.setDisplayName(colorize(Objects.requireNonNullElse(display, "&f")));
-
-
-        if (lore != null && !lore.isEmpty()){
-            itemMeta.setLore(colorize(lore));
-        }
-
-        if (glow){
-            itemMeta.addEnchant(Enchantment.LUCK, 1, false);
-            itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-        }
-
-        item.setItemMeta(itemMeta);
-        return item;
-    }
-
-    public static ItemStack itemCreate(Material material, String display, List<String> lore, boolean glow, ItemFlag... hideFlags){
-        ItemStack item = new ItemStack(material);
-        ItemMeta itemMeta = item.getItemMeta();
-        if (itemMeta == null) return item;
-
-        itemMeta.setDisplayName(colorize(Objects.requireNonNullElse(display, "&f")));
-
-
-        if (lore != null && !lore.isEmpty()){
-            itemMeta.setLore(colorize(lore));
-        }
-
-        if (glow){
-            itemMeta.addEnchant(Enchantment.LUCK, 1, false);
-            itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-        }
-
-        for (ItemFlag itemFlag : hideFlags){
-            itemMeta.addItemFlags(itemFlag);
-        }
-
-        item.setItemMeta(itemMeta);
-        return item;
-    }
 
     public static boolean hasPermission(CommandSender sender, boolean sendMessage, String ... permissions){
         if (permissions == null || permissions.length == 0) return true;
@@ -122,23 +74,29 @@ public class Utils {
         return hasPermission;
     }
 
-    public static boolean hasPermissions(Player player, boolean sendMessage, String ... permissions){
+    public static boolean hasPermission(Player player, boolean sendMessage, String ... permissions){
         return hasPermission((CommandSender) player, sendMessage, permissions);
     }
 
-    public static String getMessage(String path){
-        return Main.getInstance().getMessageConfig().getString(path);
+    public static Component getMessage(String path){
+        String msg = Main.getInstance().getMessageConfig().getString(path);
+        if (msg == null) return Component.empty();
+        return Component.text(msg);
     }
 
-    public static String getFormat(String msg){
-        return colorize(String.format("%s%s", Messages.PREFIX, msg));
+    public static Component getFormat(Component msg) {
+        if (msg == null) return Messages.PREFIX;
+
+        return Component.empty()
+                .append(Messages.PREFIX)
+                .append(colorize(PlainTextComponentSerializer.plainText().serialize(msg)));
     }
 
     public static List<String> getMessageList(String path){
         return Main.getInstance().getMessageConfig().getStringList(path);
     }
 
-    public static Component colorizeComponent(String msg) {
+    public static Component colorize(String msg) {
         return LegacyComponentSerializer.builder()
                 .character('&')
                 .hexColors()
@@ -146,30 +104,17 @@ public class Utils {
                 .deserialize(msg);
     }
 
-    public static String colorize(String msg){
-        if (msg == null) return "";
-        Pattern pattern = Pattern.compile("&#([A-Fa-f0-9]{6})");
-        Matcher matcher = pattern.matcher(msg);
-        StringBuffer buffer = new StringBuffer();
-        while (matcher.find()){
-            String hex = matcher.group(1);
-            matcher.appendReplacement(buffer, ChatColor.of("#" + hex).toString());
+    public static List<Component> colorize(List<String> messages) {
+        if (messages == null || messages.isEmpty()) return List.of();
+
+        List<Component> components = new ArrayList<>();
+        for (String msg : messages) {
+            components.add(colorize(msg));
         }
-        matcher.appendTail(buffer);
-        return ChatColor.translateAlternateColorCodes('&', buffer.toString());
+        return components;
     }
 
-    public static List<String> colorize(List<String> messages){
-        if (messages == null) return new ArrayList<>();
-
-        List<String> colored = new ArrayList<>();
-        for (String line : messages){
-            colored.add(colorize(line));
-        }
-        return colored;
-    }
-
-    public static ItemStack convertEventToItem(TutorialEvents event){
+    public static ItemStack convertEventToItem(TutorialEvent event){
 
         String name = event.getDisplayName();
 
@@ -288,8 +233,64 @@ public class Utils {
                 }
             }
 
+            case "waitregionenter" -> {
+                if (event instanceof WaitRegionEnterEvent waitRegionEnterEvent){
+                    item = waitRegionEnterEvent.createItemForInv();
+                }
+            }
+
+            case "cinematic" -> {
+                if (event instanceof CinematicEvent cinematicEvent){
+                    item = cinematicEvent.createItemForInv();
+                }
+            }
+
+            case "setrotation" -> {
+                if (event instanceof SetRotationEvent setRotationEvent){
+                    item = setRotationEvent.createItemForInv();
+                }
+            }
+
+            case "bossbar" -> {
+                if (event instanceof BossBarEvent bossBarEvent){
+                    item = bossBarEvent.createItemForInv();
+                }
+            }
+
+            case "push" -> {
+                if (event instanceof PushEvent pushEvent){
+                    item = pushEvent.createItemForInv();
+                }
+            }
+
+            case "strikelightning" -> {
+                if (event instanceof  StrikeLightningEvent strikeLightningEvent){
+                    item = strikeLightningEvent.createItemForInv();
+                }
+            }
+
         }
         return item;
+    }
+
+    public static List<Integer> findAllSlotsByPDC(Player player, String keyString) {
+
+        NamespacedKey key = new NamespacedKey(Main.getInstance(), keyString);
+        List<Integer> slots = new ArrayList<>();
+
+        PlayerInventory inventory = player.getInventory();
+
+        for (int slot = 0; slot < inventory.getSize(); slot++) {
+
+            ItemStack item = inventory.getItem(slot);
+            if (item == null || !item.hasItemMeta()) continue;
+
+            if (item.getItemMeta().getPersistentDataContainer().getKeys().contains(key)) {
+                slots.add(slot);
+            }
+        }
+
+        return slots;
     }
 
     public static String formatTick(long ticks) {
@@ -338,16 +339,56 @@ public class Utils {
         return nums;
     }
 
+    public static void sendMessageComponent(Player player, Component msg){
+        if (msg == null) return;
+        player.sendMessage(msg);
+    }
+
+    public static void sendMessageComponent(Player player, List<Component> msgs){
+        if (msgs == null) return;
+        for (Component component : msgs)
+            player.sendMessage(component);
+    }
+
     public static void sendMessage(Player player, List<String> messages){
         if (messages == null) return;
         for (String line : messages){
-            player.sendMessage(Messages.PREFIX + colorize(line));
+            player.sendMessage(colorize(line));
         }
     }
 
-    public static void sendMessage(Player player, String message){
+    public static void sendMessagePrefix(Player player, List<Component> messages){
+        if (messages == null) return;
+        for (Component line : messages){
+            player.sendMessage(Messages.PREFIX.append(line));
+        }
+    }
+
+    public static void sendMessagePrefix(Player player, Component message){
         if (message == null) return;
-        player.sendMessage(Utils.colorize(message));
+        player.sendMessage(Messages.PREFIX.append(message));
+    }
+
+    public static void sendMessagePrefixString(Player player, String message) {
+        if (player == null || message == null || message.isEmpty())
+            return;
+        player.sendMessage(
+                Messages.PREFIX
+                        .append(colorize(message))
+        );
+    }
+
+    public static void sendMessagePrefixString(Player player, List<String> messages) {
+        if (player == null || messages == null || messages.isEmpty()) return;
+
+        for (String line : messages) {
+            if (line == null || line.isEmpty()) continue;
+
+            player.sendMessage(
+                    Messages.PREFIX
+                            .append(colorize(line))
+            );
+        }
     }
 
     public static long parseTimeToTick(String input) {
@@ -388,6 +429,53 @@ public class Utils {
         }
     }
 
+    public enum Direction {
+        X,
+        Y,
+        Z,
+        NEGATIVE_Z,
+        NEGATIVE_X,
+        NEGATIVE_Y
+    }
+
+    public static Direction nameToDirection(String name){
+        if (name == null) return Direction.X;
+        if (name.equalsIgnoreCase(Direction.Y.name()))
+            return Direction.Y;
+
+        if (name.equalsIgnoreCase(Direction.Z.name()))
+            return Direction.Z;
+
+        if (name.equalsIgnoreCase(Direction.X.name()))
+            return Direction.X;
+
+        if (name.equalsIgnoreCase(Direction.NEGATIVE_Y.name()))
+            return Direction.NEGATIVE_Y;
+
+        if (name.equalsIgnoreCase(Direction.NEGATIVE_Z.name()))
+            return Direction.NEGATIVE_Z;
+
+        if (name.equalsIgnoreCase(Direction.NEGATIVE_X.name()))
+            return Direction.NEGATIVE_X;
+
+        return null;
+    }
+
+    public static Vector getVector(Direction direction, float strength, float blockPush){
+        Vector vector;
+
+        switch (direction){
+
+            case NEGATIVE_Y -> vector = new org.bukkit.util.Vector(0, -blockPush, 0).normalize().multiply(strength);
+            case Y -> vector = new org.bukkit.util.Vector(0, blockPush, 0).normalize().multiply(strength);
+            case NEGATIVE_Z -> vector = new org.bukkit.util.Vector(0, 0, -blockPush).multiply(strength);
+            case Z -> vector = new org.bukkit.util.Vector(0, 0, blockPush).normalize().multiply(strength);
+            case NEGATIVE_X -> vector = new org.bukkit.util.Vector(-blockPush, 0, 0).normalize().multiply(strength);
+            default -> vector = new Vector(blockPush, 0, 0).normalize().multiply(strength);
+
+        }
+        return vector;
+    }
 
     public static PotionEffectType getPotionEffect(String input) {
         if (input == null) return null;
@@ -434,5 +522,31 @@ public class Utils {
         return EventListMananger.Player_Interact.DISABLE;
     }
 
+    public static ItemStack createWand(){
+        ItemStack item = new ItemStack(Material.GOLDEN_AXE);
+        ItemMeta itemMeta = item.getItemMeta();
+        itemMeta.setUnbreakable(true);
+        itemMeta.displayName(colorize("&r&bTutorial Wand"));
+        itemMeta.getPersistentDataContainer().set(
+                new NamespacedKey(Main.getInstance(), "tutorial_axe"),
+                PersistentDataType.BYTE,
+                (byte) 1
+        );
+        item.setItemMeta(itemMeta);
+        return item;
+    }
 
+    public static Component withEvent(Component base, String eventName) {
+        return base.replaceText(builder -> builder
+                .match("%event%")
+                .replacement(eventName)
+        );
+    }
+
+    public static Component applyPlaceholder(Component base, @RegExp String key, String value) {
+        return base.replaceText(builder -> builder
+                .match(key)
+                .replacement(value)
+        );
+    }
 }

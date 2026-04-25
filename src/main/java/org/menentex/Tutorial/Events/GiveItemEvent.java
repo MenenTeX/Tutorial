@@ -9,12 +9,12 @@ import org.menentex.Tutorial.Utils.Utils;
 import java.util.HashMap;
 import java.util.List;
 
-public class GiveItemEvent extends TutorialEvents{
+public class GiveItemEvent extends TutorialEvent {
 
     private final Material material;
     private final int amount;
 
-    public GiveItemEvent(int index, Material material, int amount){
+    public GiveItemEvent(int index, Material material, int amount) {
         super(index);
         this.material = material;
         this.amount = amount;
@@ -24,7 +24,9 @@ public class GiveItemEvent extends TutorialEvents{
         return material.name();
     }
 
-    public int getAmount() { return amount; }
+    public int getAmount() {
+        return amount;
+    }
 
     public Material getMaterial() {
         return material;
@@ -50,7 +52,7 @@ public class GiveItemEvent extends TutorialEvents{
 
 
     @Override
-    public String getDisplayName(){
+    public String getDisplayName() {
         return "GiveItem";
     }
 
@@ -72,7 +74,7 @@ public class GiveItemEvent extends TutorialEvents{
     }
 
     @Override
-    public ItemStack createItemForInv(){
+    public ItemStack createItemForInv() {
         return Utils.itemCreate(Material.BEACON,
                 "&6GiveItem",
                 List.of(
@@ -80,7 +82,7 @@ public class GiveItemEvent extends TutorialEvents{
                         "&#3F9AAEIndex &#3F9AAE: &#F6CE71" + getIndex(),
                         "&#3F9AAEItem &#3F9AAE: &#F6CE71" + getItemName(),
                         "&#3F9AAEAmount &#3F9AAE: &#F6CE71" + getAmount()
-                ));
+                ), false);
     }
 
 }

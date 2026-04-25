@@ -11,7 +11,7 @@ import org.menentex.Tutorial.Utils.Utils;
 
 import java.util.List;
 
-public class PlayerCmdEvent extends TutorialEvents{
+public class PlayerCmdEvent extends TutorialEvent {
 
     private final String command;
 
@@ -63,7 +63,7 @@ public class PlayerCmdEvent extends TutorialEvents{
                         "",
                         "&#3F9AAEIndex &#3F9AAE: &#F6CE71" + getIndex(),
                         "&#3F9AAECommand &#3F9AAE: &#F6CE71/" + getCommand()
-                ));
+                ), false);
     }
 
 }

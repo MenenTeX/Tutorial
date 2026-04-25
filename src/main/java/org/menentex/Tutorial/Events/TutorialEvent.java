@@ -5,13 +5,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.menentex.Tutorial.Main;
 
-public abstract class TutorialEvents {
+public abstract class TutorialEvent {
 
     protected int index;
 
     private String permission = null;
 
-    public TutorialEvents(int index){
+    public TutorialEvent(int index){
         this.index = index;
     }
 
@@ -39,7 +39,7 @@ public abstract class TutorialEvents {
         permission = perm;
     }
 
-    public static TutorialEvents deserialize(ConfigurationSection section) {
+    public static TutorialEvent deserialize(ConfigurationSection section) {
         if (section == null) return null;
 
         String type = section.getString("type");
@@ -52,7 +52,7 @@ public abstract class TutorialEvents {
             index = 0;
         }
 
-        TutorialEvents event = null;
+        TutorialEvent event = null;
 
         switch (type) {
             case "UnLockHeadMovement":

@@ -6,8 +6,9 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
 import org.bukkit.inventory.Inventory;
+import org.menentex.Tutorial.DataManager.EventListMananger;
 import org.menentex.Tutorial.DataManager.InventoryBuilder;
-import org.menentex.Tutorial.Events.TutorialEvents;
+import org.menentex.Tutorial.Events.TutorialEvent;
 import org.menentex.Tutorial.Main;
 import org.menentex.Tutorial.Utils.Utils;
 
@@ -19,7 +20,7 @@ public class InMemoryGui implements Gui {
 
     private final String guiName;
     private final Map<String, Inventory> inventories = new HashMap<>();
-    private final List<TutorialEvents> events = new ArrayList<>();
+    private final List<TutorialEvent> events = new ArrayList<>();
 
     private boolean disableSendChat = false;
     private boolean allowExitCommand = false;
@@ -95,7 +96,7 @@ public class InMemoryGui implements Gui {
     }
 
 
-    public void addEvent(TutorialEvents event) {
+    public void addEvent(TutorialEvent event) {
         event.setIndex(events.size());
         events.add(event);
     }
@@ -112,14 +113,14 @@ public class InMemoryGui implements Gui {
         buildAfterRemove(Main.getInstance().getRegistryGui(), player, index);
     }
 
-    public TutorialEvents getEvent(int index){
+    public TutorialEvent getEvent(int index){
         if (index < 0 || index >= events.size()) {
             return null;
         }
         return events.get(index);
     }
 
-    public List<TutorialEvents> getEvents() {
+    public List<TutorialEvent> getEvents() {
         return Collections.unmodifiableList(events);
     }
 
@@ -252,7 +253,7 @@ public class InMemoryGui implements Gui {
         InMemoryGui gui = registryGui.getGui(guiName).orElse(null);
         if (gui == null) return;
 
-        List<TutorialEvents> e = events;
+        List<TutorialEvent> e = events;
         int sizePerInv = 36;
 
         InventoryBuilder inventoryBuilder = new InventoryBuilder();
@@ -297,7 +298,7 @@ public class InMemoryGui implements Gui {
         InMemoryGui gui = registryGui.getGui(guiName).orElse(null);
         if (gui == null) return;
 
-        List<TutorialEvents> e = events;
+        List<TutorialEvent> e = events;
         if (e.isEmpty()) return;
 
         int sizePerInv = 36;
@@ -379,7 +380,7 @@ public class InMemoryGui implements Gui {
         }
 
         ConfigurationSection eventsSection = guiSection.createSection("events");
-        for (TutorialEvents event : events) {
+        for (TutorialEvent event : events) {
             ConfigurationSection eventSection = eventsSection.createSection(String.valueOf(event.getIndex()));
             event.serialize(eventSection);
 
