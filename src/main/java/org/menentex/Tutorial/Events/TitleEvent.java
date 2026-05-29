@@ -51,6 +51,8 @@ public class TitleEvent extends TutorialEvent {
         finalTitle = Utils.applyPlaceholders(title, Utils.placeholders(player, player.getWorld(), Bukkit.getServer().getName()));
         finalSubtitle = Utils.applyPlaceholders(subtitle, Utils.placeholders(player, player.getWorld(), Bukkit.getServer().getName()));
 
+        player.sendMessage(finalTitle);
+
         player.showTitle(
                 Title.title(
                         Utils.colorize(finalTitle),

@@ -55,70 +55,39 @@ public abstract class TutorialEvent {
         TutorialEvent event = null;
 
         switch (type) {
-            case "UnLockHeadMovement":
-                event = new UnLockHeadMovementEvent(index);
-                break;
-            case "UnLockMovement":
-                event = new UnLockMovementEvent(index);
-                break;
-            case "UnGodMode":
-                event = new UnGodEvent(index);
-                break;
-            case "UnFly":
-                event = new UnFlyEvent(index);
-                break;
-            case "LockHeadMovement":
-                event = new LockHeadMovementEvent(index);
-                break;
-            case "LockMovement":
-                event = new LockMovementEvent(index);
-                break;
-            case "GodMode":
-                event = new GodModeEvent(index);
-                break;
-            case "Fly":
-                event = new FlyEvent(index);
-                break;
-            case "ClearInventory":
-                event = new ClearInventoryEvent(index);
-                break;
-            case "ClearChat":
-                event = new ClearChatEvent(index);
-                break;
-            case "Title":
-                event = TitleEvent.deserialize(index, section);
-                break;
-            case "Teleport":
-                event = TeleportEvent.deserialize(index, section);
-                break;
-            case "SetGameMode":
-                event = SetGameModeEvent.deserialize(index, section);
-                break;
-            case "Potion":
-                event = PotionEvent.deserialize(index, section);
-                break;
-            case "PlaySound":
-                event = PlaySoundEvent.deserialize(index, section);
-                break;
-            case "PlayerCommand":
-                event = PlayerCmdEvent.deserialize(index, section);
-                break;
-            case "Message":
-                event = MessageEvent.deserialize(index, section);
-                break;
-            case "GiveItem":
-                event = GiveItemEvent.deserialize(index, section);
-                break;
-            case "Delay":
-                event = DelayEvent.deserialize(index, section);
-                break;
-            case "ActionBar":
-                event = ActionBarEvent.deserialize(index, section);
-                break;
-            default:
+            case "UnLockHeadMovement" -> event = new UnLockHeadMovementEvent(index);
+            case "UnLockMovement" -> event = new UnLockMovementEvent(index);
+            case "UnGodMode" -> event = new UnGodEvent(index);
+            case "UnFly" -> event = new UnFlyEvent(index);
+            case "LockHeadMovement" -> event = new LockHeadMovementEvent(index);
+            case "LockMovement" -> event = new LockMovementEvent(index);
+            case "GodMode" -> event = new GodModeEvent(index);
+            case "Fly" -> event = new FlyEvent(index);
+            case "ClearInventory" -> event = new ClearInventoryEvent(index);
+            case "ClearChat" -> event = new ClearChatEvent(index);
+            case "Title" -> event = TitleEvent.deserialize(index, section);
+            case "Teleport" -> event = TeleportEvent.deserialize(index, section);
+            case "SetGameMode" -> event = SetGameModeEvent.deserialize(index, section);
+            case "Potion" -> event = PotionEvent.deserialize(index, section);
+            case "PlaySound" -> event = PlaySoundEvent.deserialize(index, section);
+            case "PlayerCommand" -> event = PlayerCmdEvent.deserialize(index, section);
+            case "Message" -> event = MessageEvent.deserialize(index, section);
+            case "GiveItem" -> event = GiveItemEvent.deserialize(index, section);
+            case "Delay" -> event = DelayEvent.deserialize(index, section);
+            case "ActionBar" -> event = ActionBarEvent.deserialize(index, section);
+            case "BossBar" -> event = BossBarEvent.deserialize(index, section);
+            case "Cinematic" -> event = CinematicEvent.deserialize(index, section);
+            case "Push" -> event = PushEvent.deserialize(index, section);
+            case "StrikeLightning" -> event = StrikeLightningEvent.deserialize(index, section);
+            case "SetRotation" -> event = SetRotationEvent.deserialize(index, section);
+            case "WaitRegionEnter" -> event = WaitRegionEnterEvent.deserialize(index, section);
+
+
+            default -> {
                 Main.getInstance().getLogger()
                         .warning("Unknown tutorial event type: " + type);
                 return null;
+            }
         }
         if (event != null && section.contains("permission")) {
             event.setPermission(section.getString("permission"));

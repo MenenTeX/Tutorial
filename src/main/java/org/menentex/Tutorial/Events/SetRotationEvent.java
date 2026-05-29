@@ -37,7 +37,7 @@ public class SetRotationEvent extends TutorialEvent {
         section.set("pitch", pitch);
     }
 
-    public SetRotationEvent deserialize(int index, ConfigurationSection section){
+    public static SetRotationEvent deserialize(int index, ConfigurationSection section){
         float yaw = (float) section.getDouble("yaw");
         float pitch = (float) section.getDouble("pitch");
 

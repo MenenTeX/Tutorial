@@ -32,7 +32,11 @@ public class StrikeLightningEvent extends TutorialEvent {
 
     @Override
     public void serialize(ConfigurationSection section) {
-
+        section.set("type", getDisplayName());
+        section.set("world", location.getWorld().getName());
+        section.set("x", location.getX());
+        section.set("y", location.getY());
+        section.set("z", location.getZ());
     }
 
     @Override
@@ -52,4 +56,22 @@ public class StrikeLightningEvent extends TutorialEvent {
                         "&#3F9AAEZ: &#3F9AAE: &#F6CE71" + z
                 ), false);
     }
+
+    public static StrikeLightningEvent deserialize(int index, ConfigurationSection section) {
+        String worldName = section.getString("world");
+        if (worldName == null) return null;
+
+        org.bukkit.World world = org.bukkit.Bukkit.getWorld(worldName);
+        if (world == null) return null;
+
+        Location location = new Location(
+                world,
+                section.getDouble("x"),
+                section.getDouble("y"),
+                section.getDouble("z")
+        );
+
+        return new StrikeLightningEvent(index, location);
+    }
+
 }

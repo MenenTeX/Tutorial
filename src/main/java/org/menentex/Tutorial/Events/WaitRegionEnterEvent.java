@@ -48,6 +48,7 @@ public class WaitRegionEnterEvent extends TutorialEvent implements ConditionalEv
     @Override
     public void serialize(ConfigurationSection section) {
         section.set("type", getDisplayName());
+        section.set("guiName", guiName);
         section.set("world", region.getPos1().getWorld().getName());
         String keyPos1 = region.getPos1().getX() + ", " + region.getPos1().getY() + ", " + region.getPos1().getZ();
         section.set("pos1", keyPos1);
@@ -55,10 +56,11 @@ public class WaitRegionEnterEvent extends TutorialEvent implements ConditionalEv
         section.set("pos2", keyPos2);
     }
 
-    public WaitRegionEnterEvent deserialize(int index, ConfigurationSection section){
+    public static WaitRegionEnterEvent deserialize(int index, ConfigurationSection section){
         String pos1 = section.getString("pos1");
         String pos2 = section.getString("pos2");
         String worldName = section.getString("world");
+        String guiName = section.getString("guiName");
 
         if (pos1 == null || pos2 == null || worldName == null) return null;
 

@@ -809,6 +809,7 @@ public class ActionMessage implements Listener {
 
                     } catch (NumberFormatException e) {
                         Utils.sendMessagePrefixString(player, List.of("&cInvalid number format in coordinates", "&cPlease try again or type <cancel> to cancel"));
+                        return;
                     }
                     Bukkit.getScheduler().runTask(Main.getInstance(), () -> player.sendMessage(
                             Utils.withEvent(Messages.Usage.CREATE_EVENT, "StrikeLightning")

@@ -112,6 +112,8 @@ public class CinematicEvent extends TutorialEvent {
     public void serialize(ConfigurationSection section) {
 
         if (from == null || to == null) return;
+        
+        section.set("type", getDisplayName());
 
         section.set("world", from.getWorld().getName());
 

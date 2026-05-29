@@ -1,1 +1,21 @@
 tutorials:
+  Example:
+    permission: 'tutorial.example'
+    disablePlayerInteract: false
+    interact: DISABLE
+    disableSendChat: true
+    allowExitCommand: true
+    exit-actionbar-message: '&7use &c&l/exit &7to leave tutorial'
+    lockHeadMovement: false
+    lockMovement: false
+    damageProtection: false
+    professionalInvisible: false
+    normalInvisible: false
+    events:
+      '0':
+        type: Title
+        title: '&aHello World !'
+        subtitle: ':))'
+        duration: 100
+        fadeIn: 40
+        fadeOut: 40

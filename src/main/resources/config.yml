@@ -62,5 +62,6 @@ timeout-enter-event:
   # Time allowed to configure a bossbar
   bossbar: 60
 
+  # Time allowed to configure a StrikeLightning
   strike-lightning: 30
 

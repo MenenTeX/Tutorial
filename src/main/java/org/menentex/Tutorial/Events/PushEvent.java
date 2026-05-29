@@ -33,7 +33,21 @@ public class PushEvent extends TutorialEvent {
 
     @Override
     public void serialize(ConfigurationSection section) {
+        section.set("type", getDisplayName());
+        section.set("direction", direction.name());
+        section.set("multiply", multiply);
+        section.set("strength", strength);
+    }
 
+    public static PushEvent deserialize(int index, ConfigurationSection section){
+
+        Utils.Direction direction = Utils.nameToDirection(section.getString("direction"));
+        if (direction == null) return null;
+
+        float multiply = section.getLong("multiply");
+        float strength = section.getLong("strength");
+
+        return new PushEvent(index, direction, multiply, strength);
     }
 
     @Override

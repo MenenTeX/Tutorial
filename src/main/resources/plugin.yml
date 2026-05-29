@@ -33,6 +33,7 @@ permissions:
     children:
       tutorial.edit: true
       tutorial.use: true
+      tutorial.exit: true
   tutorial.edit:
     default: op
   tutorial.use:
