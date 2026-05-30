@@ -5,7 +5,7 @@
 
   ### Guide Your Players With This Plugin
 
-  [![Version](https://img.shields.io/badge/version-0.0.2--BETA-blue.svg)](https://github.com/MenenTeX/Tutorial)
+  [![Version](https://img.shields.io/badge/version-0.0.2-blue.svg)](https://github.com/MenenTeX/Tutorial)
 
   **TutorialCreator is a powerful and user-friendly Spigot plugin that lets you easily teach and guide your players through your server**
 
